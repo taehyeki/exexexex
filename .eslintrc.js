@@ -4,8 +4,9 @@ module.exports = {
     node: true
   },
   'extends': [
-    'plugin:vue/essential',
-    'eslint:recommended'
+    'plugin:vue/recommended',
+    'plugin:vuetify/recommended',
+    'eslint:recommended',
   ],
   parserOptions: {
     parser: '@babel/eslint-parser'
