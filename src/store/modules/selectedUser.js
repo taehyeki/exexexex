@@ -10,6 +10,7 @@ export default {
         headOffice : null,
         permitRegCode : null,
         permitRegImgPath : null,
+
         addr : null,
         siteId : null,
         confirmed : null,
@@ -28,8 +29,12 @@ export default {
         bizRegImgPath  : null,
         compName : null,
         repName : null,
-
     },
+    typeIndex : 0,
+    circleRange : 50,
+    optSelect : ['거리']
+
+
 
   },
   mutations : {
@@ -83,20 +88,39 @@ export default {
     removeWsteList(state,payload){
       state.selectedUser.wsteList  = state.selectedUser.wsteList.filter(v => v != payload)
     },
+    setCircleRange(state,payload){
+      state.circleRange = Number(payload)
+    },
+    setTypeIndex(state,payload){
+      state.typeIndex = Number(payload)
+    }
   },
   actions : {
-    async getSelectedUserInfo({commit},payload){
+    async getSelectedUserInfo({state,commit},{siteId}){
+      // let OPT;
+      // if (state.typeIndex == 0){
+      //   OPT = {
+      //     CIRCLE_RANGE : state.circleRange
+      //   }
+      // } else {
+      //   OPT = null
+      // }
       try {
         const url = 'api/admin/1_03_main/get_site_info'
         const data = {
                       params : JSON.stringify([{
                             USER_ID : 238,
-                            SITE_ID : Number(payload)
+                            SITE_ID : Number(siteId),
+                            TYPE_INDEX : state.typeIndex,
+                            CIRCLE_RANGE : state.circleRange
                             }])
                       }
+
         const res = await myAxios(url,method,data)
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0]
-        commit('setSelectedUser',siteInfo)
+        console.log(siteInfo,'siteinfo')
+        console.log(state.circleRange,'range')
+        await commit('setSelectedUser',siteInfo)
       } catch (e) {
         alert(e)
       }
@@ -199,6 +223,14 @@ export default {
         'permitRegImgPath' : state.selectedUser.permitRegImgPath,
       }
     },
+    getOptList(state){
+      return {
+        typeIndex : state.typeIndex,
+        circleRange : state.circleRange,
+        optSelect : state.optSelect
+      }
+
+    }
 
   }
 }

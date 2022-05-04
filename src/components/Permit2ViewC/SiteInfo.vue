@@ -13,7 +13,7 @@
       </v-col>
     </v-row>
 
-    <v-expansion-panels>
+    <v-expansion-panels multiple>
       <v-expansion-panel>
         <v-expansion-panel-header>
           <v-card-title>

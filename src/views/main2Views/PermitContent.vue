@@ -10,6 +10,9 @@
         <v-col cols="6">
           <SiteMap2 />
         </v-col>
+        <v-col cols="6">
+          <OptList />
+        </v-col>
       </v-row>
     </v-card>
   </v-container>
@@ -18,15 +21,16 @@
 import SiteInfo from "@/components/Permit2ViewC/SiteInfo.vue"
 import TitleText from "@/components/Permit2ViewC/TitleText.vue"
 import SiteMap2 from "@/components/Permit2ViewC/SiteMap2.vue"
+import OptList from "@/components/ContentC/OptList.vue"
 
 
 import {mapActions} from "vuex"
 export default {
   components : {
-    SiteInfo,TitleText,SiteMap2
+    SiteInfo,TitleText,SiteMap2,OptList
   },
   created(){
-    this.getSelectedUserInfo(this.$route.params.id)
+    this.getSelectedUserInfo({siteId : this.$route.params.id, circleRange : null})
   },
   methods : {
     ...mapActions('selectedUser',['getSelectedUserInfo']),

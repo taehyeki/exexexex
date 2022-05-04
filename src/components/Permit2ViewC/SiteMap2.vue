@@ -1,17 +1,21 @@
 <template>
   <div>
+    <h1>{{ circleRange }}km 이내의 업체</h1>
     <div id="map" />
+
     <span style="display : none">
       {{ getSeletedUser.lat }}
+      {{ getSeletedUser.siteList }}
     </span>
   </div>
 </template>
 <script>
 
-import {mapGetters} from "vuex"
+import {mapGetters,mapState} from "vuex"
 export default {
   computed : {
     ...mapGetters('selectedUser',['getSeletedUser']),
+    ...mapState('selectedUser',['circleRange'])
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -26,7 +30,10 @@ export default {
     }
   },
   updated() {
+
     document.getElementById('map').innerHTML = "";
+    console.log('여기가 오면 지도가 업데이트')
+    console.log(this.getSeletedUser.siteList,'lists')
     this.initMap()
   },
   methods: {

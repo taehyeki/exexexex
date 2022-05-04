@@ -4,7 +4,9 @@ export default {
   state : {
     loading : false,
     wsteList1 : [],
-    wsteList2 : []
+    wsteList2 : [],
+
+
   },
   mutations : {
     getLoading(state){

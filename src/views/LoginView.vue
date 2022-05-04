@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="display : flex; justify-contents : center; align-items : center; height : 100%">
     <v-container>
       <v-sheet>
         <v-card>
