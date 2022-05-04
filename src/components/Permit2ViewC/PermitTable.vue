@@ -1,8 +1,8 @@
 <template>
   <v-simple-table
-    dense
+
     fixed-header
-    height="300px"
+    height="700px"
   >
     <template #default>
       <thead>
@@ -26,7 +26,12 @@
           v-for="item,idx in showPermitList"
           :key="idx"
         >
-          <td>{{ item.SITE_NAME }}</td>
+          <td
+            style="cursor : pointer"
+            @click="goToContent(item.SITE_ID)"
+          >
+            {{ item.SITE_NAME }}
+          </td>
           <td>{{ item.PERMIT_REG_CODE }}</td>
           <td>{{ item.COMPANY_INFO[0].BIZ_REG_CODE }}</td>
           <td>{{ getTime(item.CREATED_AT) }}</td>
@@ -44,6 +49,9 @@ export default {
   methods : {
     getTime(time){
       return time.slice(0,19)
+    },
+    goToContent(siteId){
+       this.$router.push({ path: `content/${siteId}`})
     }
   }
 

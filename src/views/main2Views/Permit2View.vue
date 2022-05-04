@@ -1,7 +1,15 @@
 <template>
   <div>
-    <SearchBar />
-    <ConfirmedSelect />
+    <v-row style="margin-top : 10px">
+      <v-col cols="4">
+        <SearchBar />
+      </v-col>
+    </v-row>
+    <v-row style="margin-bottom : 10px">
+      <v-col cols="2">
+        <ConfirmedSelect />
+      </v-col>
+    </v-row>
     <PermitTable />
     <PermitNav />
   </div>
