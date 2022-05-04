@@ -25,11 +25,10 @@
         <tr
           v-for="item,idx in showPermitList"
           :key="idx"
+          style="cursor : pointer"
+          @click="goToContent(item.SITE_ID)"
         >
-          <td
-            style="cursor : pointer"
-            @click="goToContent(item.SITE_ID)"
-          >
+          <td>
             {{ item.SITE_NAME }}
           </td>
           <td>{{ item.PERMIT_REG_CODE }}</td>
