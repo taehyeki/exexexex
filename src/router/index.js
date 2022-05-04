@@ -1,23 +1,65 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    component: () => import( '../views/defaultViews/DefaultView.vue'),
+    children : [
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import( '../views/defaultViews/AdminDefaultView.vue'),
+        children : [
+          {
+          path: 'main',
+          name: 'main',
+          component: () => import( '../views/defaultViews/MainDefaultView.vue'),
+          children : [
+            {
+            path: 'index',
+            name: 'index',
+            component: () => import( '../views/mainViews/MainIndexView.vue'),
+
+            },
+            {
+              path: 'permit',
+              name: 'permit',
+              component: () => import( '../views/mainViews/mainChildViews/PermitView.vue'),
+
+            }
+          ]
+          },
+          {
+          path: 'main2',
+          name: 'main2',
+          component: () => import( '../views/defaultViews/Main2DefaultView.vue'),
+          children : [
+            {
+
+              path: 'permit2',
+              name: 'permit2',
+              component: () => import( '../views/main2Views/Permit2View.vue'),
+
+            },
+            {
+
+              path: 'content/:id',
+              name: 'content',
+              component: () => import( '../views/main2Views/PermitContent.vue'),
+
+            }
+          ]
+          }
+
+        ]
+      }
+    ]
   },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+
 ]
 
 const router = new VueRouter({
