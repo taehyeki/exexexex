@@ -73,10 +73,17 @@ export default {
         )
       }
       // 데이터를 요청한 뒤
-      const res = await myAxios(url,method,data)
-      console.log(res)
+      try {
+        const res = await myAxios(url,method,data)
+        commit('setPermitList',JSON.parse(res.data.data[0].SITE_LISTS))
+      }catch(e){
+        console.log(e)
+
+      }
+
+
       // 받아온 값을 mutation을 사용하여 vuex에 저장
-      commit('setPermitList',JSON.parse(res.data.data[0].SITE_LISTS))
+
     },
   },
   getters : {

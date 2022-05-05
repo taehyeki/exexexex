@@ -64,6 +64,7 @@ export default {
   },
   created(){
     this.getWsteLists()
+
   },
   methods : {
     ...mapActions('common',['getWsteLists']),

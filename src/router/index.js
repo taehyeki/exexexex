@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import VueCookies from "vue-cookies";
 
 Vue.use(VueRouter)
 
@@ -62,6 +62,7 @@ const routes = [
         path: 'login',
         name: 'login',
         component: () => import( '../views/LoginView.vue'),
+        meta: { unauthorized : true },
       }
 
     ]
@@ -73,6 +74,27 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach( async(to, from, next) => {
+  console.log(to,'to')
+  console.log(from,'from')
+  console.log(next,'next')
+  // console.log('라우터')
+  if (to.matched.some(record => record.meta.unauthorized) ){
+    if (VueCookies.get('token')){
+      return next('/admin/main2/permit2');
+    }
+    return next();
+  }
+  if (to.name == 'login' && VueCookies.get('token')){
+    console.log('로그인 했는데 로그인으로 와버림')
+    return next('/admin/main2/permit2');
+  }
+
+
+  return next();
+
 })
 
 export default router

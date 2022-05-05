@@ -6,6 +6,13 @@ import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false
 
+
+
+
+
+// Vue.$cookies.config("7d");
+
+
 new Vue({
   router,
   store,

@@ -1,5 +1,6 @@
 import myAxios from "@/api"
-
+import VueCookies from "vue-cookies";
+import router from "@/router"
 export default {
   namespaced : true,
   state : {
@@ -44,11 +45,13 @@ export default {
         const getData = JSON.parse(res.data.data)
         const userId = getData.ID
         const classNum = getData.CLASS
+        const token = res.data.token.token
+        VueCookies.set('token',token,'60 * 30' )
         commit('setUser',{userId,classNum })
+        router.push({path : '/admin/main2/permit2'})
       }catch (e) {
         console.log(e)
       }
-      console.log(commit)
     }
   },
   getters : {

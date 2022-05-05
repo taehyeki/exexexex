@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from "@/store/index"
-
+import VueCookies from "vue-cookies";
+import router from "@/router"
 const instance = axios.create({
   // .env 파일에 작성한 환경변수로 baseURL 설정
   baseURL: process.env.VUE_APP_API
@@ -9,10 +10,12 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function(config) {
+    config.headers.token = VueCookies.get('token');
     store.commit('common/getLoading')
     return config;
   },
   function(error) {
+    console.log(error)
     store.commit('common/endLoading')
     return Promise.reject(error)
   },
@@ -21,9 +24,17 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   function(response) {
     store.commit('common/endLoading')
+    if(response.data.errcode){
+
+        router.push({path : '/login'})
+        VueCookies.remove('token')
+      console.log('api 에서 보내는 콘솔')
+      return response
+    }
     return response;
   },
   function(error) {
+
     store.commit('common/endLoading')
     return Promise.reject(error);
 
