@@ -1,19 +1,29 @@
 <template>
-  <div style="display : flex; justify-contents : center; align-items : center; height : 100%">
-    <v-container>
-      <v-sheet>
-        <v-card>
-          dd
-        </v-card>
-      </v-sheet>
-    </v-container>
+  <div class="container-box">
+    <v-sheet style="width:50%">
+      <LoginForm />
+    </v-sheet>
   </div>
 </template>
 <script>
+import LoginForm from "@/components/LoginC/LoginForm.vue"
 export default {
+  components : {
+    LoginForm
+  },
+  mounted(){
+    document.querySelector('.container-box').style.heigth = window.innerHeight / 2
 
+  }
 }
 </script>
-<style lang="">
+<style >
+.container-box {
 
+  height: 700px !important;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+}
 </style>

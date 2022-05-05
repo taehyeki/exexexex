@@ -1,12 +1,55 @@
+import myAxios from "@/api"
+
 export default {
   namespaced : true,
   state : {
-    userId : 238
+    userId : null,
+    class : null,
   },
   mutations : {
+    setUser(state, {userId, classNum}){
+      state.userId = userId
+      state.class = classNum
+    }
   },
   actions : {
+    async login({commit},{adminId,adminPw}){
+      const method = 'post'
+      const url = 'api/admin/common/admin_login'
+      let data =
+      {
+        params :
+          JSON.stringify(
+          [
+            {
+              ID : adminId,
+              PW : adminPw,
+            }
+          ]
+        )
+      }
+      try {
+        const res = await myAxios(url,method,data)
+        const state = res.data.state
+        console.log(res)
+        if ( state == 100001 ) {
+          alert('아이디가 존재하지 않습니다.')
+          return
+        }
 
+        if (res.data.data == null ){
+          alert('비밀번호가 일치하지 않습니다.')
+          return
+        }
+        const getData = JSON.parse(res.data.data)
+        const userId = getData.ID
+        const classNum = getData.CLASS
+        commit('setUser',{userId,classNum })
+      }catch (e) {
+        console.log(e)
+      }
+      console.log(commit)
+    }
   },
   getters : {
 

@@ -59,9 +59,8 @@ export default {
       if (this.keyword == ''){
         alert('거리를 입력해주세요. ex) 50km >>> 50 ')
       } else {
-        console.log(this.getSeletedUser.siteId)
         this.setCircleRange(this.keyword)
-        console.log('여기 지난 뒤에 지도가 업데이트 될 듯?')
+        console.log('셋 서클 레인지했음')
         this.getSelectedUserInfo({siteId : this.getSeletedUser.siteId})
       }
     }

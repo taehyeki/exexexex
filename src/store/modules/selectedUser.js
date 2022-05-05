@@ -66,8 +66,6 @@ export default {
       }
     },
     changeSelectedUserInfo(state,{key,value}){
-      console.log(key)
-      console.log(value)
       state.selectedUser[key] = value
     },
     setPermitImg(state,payload){
@@ -118,8 +116,6 @@ export default {
 
         const res = await myAxios(url,method,data)
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0]
-        console.log(siteInfo,'siteinfo')
-        console.log(state.circleRange,'range')
         await commit('setSelectedUser',siteInfo)
       } catch (e) {
         alert(e)

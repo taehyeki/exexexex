@@ -1,11 +1,10 @@
 <template>
   <div>
-    <h1>{{ circleRange }}km 이내의 업체</h1>
+    <h2>{{ circleRange }}km 이내의 업체</h2>
     <div id="map" />
 
     <span style="display : none">
-      {{ getSeletedUser.lat }}
-      {{ getSeletedUser.siteList }}
+      {{ getSeletedUser }}
     </span>
   </div>
 </template>
@@ -30,10 +29,8 @@ export default {
     }
   },
   updated() {
-
+    console.log('지도 업데이트')
     document.getElementById('map').innerHTML = "";
-    console.log('여기가 오면 지도가 업데이트')
-    console.log(this.getSeletedUser.siteList,'lists')
     this.initMap()
   },
   methods: {

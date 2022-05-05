@@ -73,6 +73,8 @@ export default {
   }
 }
 </script>
-<style scoped>
-
+<style >
+html {
+    height: 100%;
+}
 </style>
