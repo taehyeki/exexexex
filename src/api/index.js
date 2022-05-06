@@ -22,13 +22,18 @@ instance.interceptors.request.use(
 )
 
 instance.interceptors.response.use(
-  function(response) {
+  async function(response) {
     store.commit('common/endLoading')
     if(response.data.errcode){
-
+        if (response.data.errcode =='expired'){
+          const res = await axios.post('http://192.168.0.46:3000/api/admin/common/renewalToken',{userId: '유저아이디'})
+          const token  = res.data.token.token
+          VueCookies.remove('token')
+          VueCookies.set('token',token,'6h')
+          return
+        }
         router.push({path : '/login'})
         VueCookies.remove('token')
-      console.log('api 에서 보내는 콘솔')
       return response
     }
     return response;

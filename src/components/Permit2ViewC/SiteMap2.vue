@@ -29,7 +29,6 @@ export default {
     }
   },
   updated() {
-    console.log('지도 업데이트')
     document.getElementById('map').innerHTML = "";
     this.initMap()
   },

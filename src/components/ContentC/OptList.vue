@@ -61,7 +61,6 @@ export default {
         alert('거리를 입력해주세요. ex) 50km >>> 50 ')
       } else {
         this.setCircleRange(this.keyword)
-        console.log('셋 서클 레인지했음')
         this.getSelectedUserInfo({siteId : this.getSeletedUser.siteId})
       }
     }

@@ -33,6 +33,18 @@ export default {
   components : {
     SiteInfo,TitleText,SiteMap2,OptList,mapListTable
   },
+  watch : {
+    $route(to) {
+      // 네비게이션에서 버튼을 눌렀을 경우에 그 파라미터 값을 받아와서
+      // 페이지번호 를 받아온 값으로 바꾸고 데이터들을 불러옴
+      // 페이지 번호를 Number로 바꿔준다. 만약 아무 값이 없다면 NaN이 나오니까 아래에서 1로 바꿔주는 작업을 진행
+      // this.controlQuerySetAndGetPermitList(to)
+
+      const siteId = to.params.id
+       this.getSelectedUserInfo({siteId, circleRange : null})
+
+    }
+  },
   created(){
     this.getSelectedUserInfo({siteId : this.$route.params.id, circleRange : null})
   },

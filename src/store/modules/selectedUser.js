@@ -118,9 +118,11 @@ export default {
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0]
         await commit('setSelectedUser',siteInfo)
       } catch (e) {
-        alert(e)
+        console.log('토큰 갱신 하러 갔다 올게요~')
+
       }
     },
+
     async uploadPermitImgToS3({commit},payload){
       const method = 'post'
       const url = 'api/admin/common/upload_img_to_s3'
@@ -129,8 +131,13 @@ export default {
           "content-type": "multipart/form-data"
         }
       };
-      const res = await myAxios(url,method,payload,config)
-      commit('setPermitImg',res.data)
+      try{
+        const res = await myAxios(url,method,payload,config)
+        commit('setPermitImg',res.data)
+      } catch(e){
+        console.log(e)
+      }
+
     },
     async uploadBizImgToS3({commit},payload){
       const method = 'post'
@@ -140,8 +147,14 @@ export default {
           "content-type": "multipart/form-data"
         }
       };
-      const res = await myAxios(url,method,payload,config)
-      commit('setBizImg',res.data)
+      try{
+        const res = await myAxios(url,method,payload,config)
+        commit('setBizImg',res.data)
+      }catch(e){
+        console.log(e)
+      }
+
+
     },
     async sendModifiedPermit({state}){
       const method = 'post'

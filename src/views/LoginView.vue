@@ -13,13 +13,11 @@ export default {
   },
   mounted(){
     document.querySelector('.container-box').style.heigth = window.innerHeight / 2
-
-  }
+  },
 }
 </script>
 <style >
 .container-box {
-
   height: 700px !important;
   justify-content: center;
   align-items: center;

@@ -16,8 +16,10 @@
       </thead>
       <tbody>
         <tr
-          v-for="site in getSeletedUser.siteList"
-          :key="site"
+          v-for="site,idx in getSeletedUser.siteList"
+          :key="idx"
+          style="cursor : pointer"
+          @click="goToContent(site.ID)"
         >
           <td>{{ site.SITE_NAME }}</td>
           <td>{{ changeToString(site.DIST) }}</td>
@@ -35,6 +37,9 @@ export default {
   methods : {
     changeToString(value){
       return String(value).slice(0,4) + 'km'
+    },
+    goToContent(siteId){
+       this.$router.push({ path: `./${siteId}`})
     }
   }
 }
