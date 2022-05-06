@@ -5,6 +5,7 @@
         <v-select
           :items="getOptList.optSelect"
           label="종류"
+          hide-details=""
           solo
           @change="changeSelect"
         />

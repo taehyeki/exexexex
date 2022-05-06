@@ -10,8 +10,11 @@
         <v-col cols="6">
           <SiteMap2 />
         </v-col>
-        <v-col cols="6">
+        <v-col
+          cols="6"
+        >
           <OptList />
+          <mapListTable />
         </v-col>
       </v-row>
     </v-card>
@@ -22,12 +25,13 @@ import SiteInfo from "@/components/Permit2ViewC/SiteInfo.vue"
 import TitleText from "@/components/Permit2ViewC/TitleText.vue"
 import SiteMap2 from "@/components/Permit2ViewC/SiteMap2.vue"
 import OptList from "@/components/ContentC/OptList.vue"
+import mapListTable from "@/components/ContentC/mapListTable.vue"
 
 
 import {mapActions} from "vuex"
 export default {
   components : {
-    SiteInfo,TitleText,SiteMap2,OptList
+    SiteInfo,TitleText,SiteMap2,OptList,mapListTable
   },
   created(){
     this.getSelectedUserInfo({siteId : this.$route.params.id, circleRange : null})

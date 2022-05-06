@@ -25,7 +25,9 @@
             <v-col
               v-for="value, key in getLine1"
               :key="key"
-              cols="6"
+              cols="12"
+              lg="6"
+              xl="6"
             >
               <v-row
                 dense
@@ -152,7 +154,9 @@
             <v-col
               v-for="value, key in getLine2"
               :key="key"
-              cols="6"
+              cols="12"
+              lg="6"
+              xl="6"
             >
               <v-row
                 dense
