@@ -8,6 +8,9 @@
       <thead>
         <tr>
           <th class="text-left">
+            사이트 아이디
+          </th>
+          <th class="text-left">
             사이트 이름
           </th>
           <th class="text-left">
@@ -28,9 +31,8 @@
           style="cursor : pointer"
           @click="goToContent(item.SITE_ID)"
         >
-          <td>
-            {{ item.SITE_NAME }}
-          </td>
+          <td>{{ item.SITE_ID }}</td>
+          <td>{{ item.SITE_NAME }}</td>
           <td>{{ item.PERMIT_REG_CODE }}</td>
           <td>{{ item.COMPANY_INFO[0].BIZ_REG_CODE }}</td>
           <td>{{ getTime(item.CREATED_AT) }}</td>

@@ -39,8 +39,12 @@ export default {
   },
   mutations : {
     setSelectedUser(state,payload){
+
       state.selectedUser.headOffice = payload.SITE_INFO[0].HEAD_OFFICE
-      state.selectedUser.confirmedAt = payload.SITE_INFO[0].CONFIRMED_AT
+      state.selectedUser.confirmedAt = payload.SITE_INFO[0].CONFIRMED_AT.slice(0,19)
+      if (payload.SITE_INFO[0].CONFIRMED != 1){
+        state.selectedUser.confirmedAt = '확인되지 않았습니다.'
+      }
       state.selectedUser.confirmed = payload.SITE_INFO[0].CONFIRMED
       state.selectedUser.active = payload.SITE_INFO[0].ACTIVE
       state.selectedUser.permitRegImgPath = payload.PERMIT_REG_IMG_PATH
@@ -58,6 +62,7 @@ export default {
       state.selectedUser.lat = payload.SITE_INFO[0].LAT
       state.selectedUser.lng = payload.SITE_INFO[0].LNG
       state.selectedUser.siteList = payload.SITE_LIST
+
       if(payload.WSTE_INFO == null ){
         state.selectedUser.wsteList = []
       }
