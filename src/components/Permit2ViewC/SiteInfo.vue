@@ -13,7 +13,10 @@
       </v-col>
     </v-row>
 
-    <v-expansion-panels multiple>
+    <v-expansion-panels
+      multiple
+      :value="[0,1]"
+    >
       <v-expansion-panel>
         <v-expansion-panel-header>
           <v-card-title>

@@ -3,7 +3,7 @@
     <v-pagination
       :value="getPageNum"
       :length="getLastPageNum"
-      :total-visible="1"
+      :total-visible="7"
       @input="changePage"
     />
   </div>

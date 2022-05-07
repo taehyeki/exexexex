@@ -75,6 +75,7 @@ export default {
       // 데이터를 요청한 뒤
       try {
         const res = await myAxios(url,method,data)
+        console.log(JSON.parse(res.data.data[0].SITE_LISTS))
         commit('setPermitList',JSON.parse(res.data.data[0].SITE_LISTS))
       }catch(e){
         console.log(e)

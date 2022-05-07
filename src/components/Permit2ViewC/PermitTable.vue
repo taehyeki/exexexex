@@ -11,6 +11,9 @@
             사이트 아이디
           </th>
           <th class="text-left">
+            구분
+          </th>
+          <th class="text-left">
             사이트 이름
           </th>
           <th class="text-left">
@@ -32,6 +35,7 @@
           @click="goToContent(item.SITE_ID)"
         >
           <td>{{ item.SITE_ID }}</td>
+          <td>{{ checkEmOrCol(item.SITE_INFO[0].TRMT_BIZ_CODE) }} {{ checkPerOrCor(item.SITE_ID) }}</td>
           <td>{{ item.SITE_NAME }}</td>
           <td>{{ item.PERMIT_REG_CODE }}</td>
           <td>{{ item.COMPANY_INFO[0].BIZ_REG_CODE }}</td>
@@ -53,6 +57,18 @@ export default {
     },
     goToContent(siteId){
        this.$router.push({ path: `content/${siteId}`})
+    },
+    checkEmOrCol(code){
+      if (Number(code) == 9){
+        return '배출자'
+      }
+      return '수거자'
+    },
+    checkPerOrCor(siteId){
+      if(siteId == 0){
+        return '(개인)'
+      }
+      return '(사업자)'
     }
   }
 
