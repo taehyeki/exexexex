@@ -9,7 +9,7 @@
 
     <v-app-bar
       dense
-      color="blue"
+      color="#01b286"
       app
     >
       <v-app-bar-nav-icon @click.stop="toggle" />
@@ -30,6 +30,7 @@
 
     <v-footer
       padless
+      style="background-color : #01b286; color : white"
     >
       <v-col
         class="text-center"
@@ -88,7 +89,9 @@ export default {
 }
 </script>
 <style >
+
 html {
+
     height: 100%;
 }
 </style>

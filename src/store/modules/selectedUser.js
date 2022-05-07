@@ -95,14 +95,6 @@ export default {
   },
   actions : {
     async getSelectedUserInfo({state,commit},{siteId}){
-      // let OPT;
-      // if (state.typeIndex == 0){
-      //   OPT = {
-      //     CIRCLE_RANGE : state.circleRange
-      //   }
-      // } else {
-      //   OPT = null
-      // }
       try {
         const url = 'api/admin/1_03_main/get_site_info'
         const data = {
@@ -116,9 +108,10 @@ export default {
 
         const res = await myAxios(url,method,data)
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0]
+        console.log(siteInfo)
         await commit('setSelectedUser',siteInfo)
       } catch (e) {
-        console.log('토큰 갱신 하러 갔다 올게요~')
+        console.log('토큰 갱신 한번더 실행해주세요.')
 
       }
     },

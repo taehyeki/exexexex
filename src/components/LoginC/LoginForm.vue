@@ -1,10 +1,10 @@
 <template>
   <v-card style="overflow : hidden; display : flex">
-    <div style="width : 50%">
+    <div style="width : 50%; background-color : #01b286">
       <v-img
         height="100%"
-        lazy-src="https://picsum.photos/id/11/10/6"
-        src="https://picsum.photos/id/11/500/300"
+        lazy-src="https://chium.s3.ap-northeast-2.amazonaws.com/temp/admin-1651803316.png"
+        src="https://chium.s3.ap-northeast-2.amazonaws.com/temp/admin-1651803316.png"
       />
     </div>
     <div
@@ -12,16 +12,26 @@
     >
       <div>
         <v-row>
-          <v-col class="input-label">
-            <v-subheader>아이디</v-subheader>
+          <v-col
+            class="input-label"
+            cols="4"
+          >
+            <v-subheader style="font-size : 16px; font-weight : bold">
+              아이디
+            </v-subheader>
           </v-col>
           <v-col>
             <v-text-field v-model="adminId" />
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="input-label">
-            <v-subheader>비밀번호</v-subheader>
+          <v-col
+            class="input-label"
+            cols="4"
+          >
+            <v-subheader style="font-size : 16px; font-weight : bold">
+              비밀번호
+            </v-subheader>
           </v-col>
           <v-col>
             <v-text-field
@@ -66,10 +76,16 @@ export default {
   justify-content: center;
   align-items: center;
   .input-label {
+    padding-left : 0;
+    padding-right : 0;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+}
+.cols-padding-x-zero {
+      padding-left : 0;
+    padding-right : 0;
 }
 
 </style>

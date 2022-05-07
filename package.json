@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --local",
     "build": "vue-cli-service build",
+    "build-deploy": "vue-cli-service build --mode deploy",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

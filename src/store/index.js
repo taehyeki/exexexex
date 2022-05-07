@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import common from './modules/common'
-import leftnav from './modules/leftnav'
-import main from './modules/main'
-import permit from './modules/permit'
 import permit2 from './modules/permit2'
 import auth from './modules/auth'
 import selectedUser from './modules/selectedUser'
@@ -28,9 +25,6 @@ export default new Vuex.Store({
   ],
   modules: {
     common,
-    main,
-    leftnav,
-    permit,
     permit2,
     selectedUser,
     auth
