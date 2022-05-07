@@ -8,7 +8,7 @@
       <thead>
         <tr>
           <th class="text-left">
-            사이트 아이디
+            ID
           </th>
           <th class="text-left">
             구분
