@@ -25,6 +25,7 @@ export default {
         state.navItems = [
           { title: '회원목록', icon: 'mdi-clipboard-text-outline', route : '/admin/main2/permit2' },
           { title: '로그아웃', icon: 'mdi-account-cancel', route : '/logout' },
+          { title: '통계📊', icon: 'mdi-chart-bar', route : '/admin/main2/chart' },
         ]
       } else {
         state.navItems = [{ title: '로그인', icon: 'mdi-account', route : '/login' }]

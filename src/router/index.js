@@ -48,6 +48,13 @@ const routes = [
             },
             {
 
+              path: 'chart',
+              name: 'chart',
+              component: () => import( '../views/main2Views/ChartView.vue'),
+
+            },
+            {
+
               path: 'content/:id',
               name: 'content',
               component: () => import( '../views/main2Views/PermitContent.vue'),

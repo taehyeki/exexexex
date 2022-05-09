@@ -74,19 +74,27 @@
                         <!-- 2가지 필드를 적용한다. 아이디를 다르게 하기위함 input에는 보통 key를 넣었지만 여기에는 idx를 넣어 판별-->
                         <v-col>
                           <v-text-field
+                            :id="manager+idx"
                             dense
                             :value="manager.USER_NAME"
                             hide-details=""
                             solo
+                            readonly
+                            append-icon="mdi-pencil"
+                            @click:append="changeContent(manager+idx)"
                             @input="MyVmodel('ma'+idx,$event)"
                           />
                         </v-col>
                         <v-col>
                           <v-text-field
+                            :id="idx+manager"
                             dense
                             :value="manager.PHONE"
                             hide-details=""
                             solo
+                            readonly
+                            append-icon="mdi-pencil"
+                            @click:append="changeContent(idx+manager)"
                             @input="MyVmodel('ph'+idx,$event)"
                           />
                         </v-col>
