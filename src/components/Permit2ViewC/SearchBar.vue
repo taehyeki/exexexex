@@ -18,7 +18,7 @@ export default {
     }
   },
   computed : {
-    ...mapGetters('permit2',['getConfirmedState','getSearch'])
+    ...mapGetters('permit2',['getConfirmedState','getSearch','getEmitOrCol'])
   },
   methods : {
     ...mapMutations('permit2',['setSearch']),
@@ -31,7 +31,7 @@ export default {
         return
       }
       // vuex에 저장된 값들을 불러와서 같이 라우터 쿼리에 넣어 보내준다.
-      this.$router.push({ path: 'permit2', query: { page: 1 , keyword : this.getSearch, filter : this.getConfirmedState }})
+      this.$router.push({ path: 'permit2', query: { page: 1 , keyword : this.getSearch, filter : this.getConfirmedState, eoc : this.getEmitOrCol }})
       this.preKeyword = content
     },
     // 검색어를 입력할 때 마다 발생, 빈 값이면 null로 만들어 준다.

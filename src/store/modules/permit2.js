@@ -8,10 +8,12 @@ export default {
       pageSize : 15,
       permitList : [],
       confirmed : null,
+      emitOrCol : null,
       pageNum : 1,
       lastPageNum : 10,
     },
     confirmedList : [null,true,false],
+    emitOrColList : [null,true,false],
     search : null,
 
 
@@ -49,6 +51,10 @@ export default {
     // search bar에 적은 keyword를 vuex에 저장
     setSearch(state,payload){
       state.search = payload
+    },
+
+    setEmitOrCol(state,payload){
+      state.permitObj.emitOrCol = payload
     }
 
   },
@@ -67,15 +73,17 @@ export default {
               SEARCH : state.search,
               OFFSET_SIZE : state.permitObj.pageOffset,
               PAGE_SIZE : state.permitObj.pageSize,
-              CONFIRMED: state.permitObj.confirmed
+              CONFIRMED: state.permitObj.confirmed,
+              EMIT_OR_COL : state.permitObj.emitOrCol,
             }
           ]
         )
       }
+      console.log(data,'데이터 보낸')
       // 데이터를 요청한 뒤
       try {
         const res = await myAxios(url,method,data)
-        console.log(JSON.parse(res.data.data[0].SITE_LISTS))
+        console.log(JSON.parse(res.data.data[0].SITE_LISTS),'데이터 받은')
         commit('setPermitList',JSON.parse(res.data.data[0].SITE_LISTS))
       }catch(e){
         console.log(e)
@@ -110,6 +118,12 @@ export default {
     },
     getSearch(state){
       return state.search
+    },
+    getEmitColList(state){
+      return state.emitOrColList
+    },
+    getEmitOrCol(state){
+      return state.permitObj.emitOrCol
     }
 
   }

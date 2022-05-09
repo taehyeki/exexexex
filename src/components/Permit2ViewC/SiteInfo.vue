@@ -81,6 +81,7 @@
                     :value="value"
                     hide-details=""
                     solo
+
                     @click:append="changeContent(key)"
                     @input="MyVmodel(key,$event)"
                   />
@@ -89,7 +90,7 @@
             </v-col>
           </v-row>
           <v-divider style="margin-top : 20px; margin-bottom : 20px" />
-          <v-row>
+          <v-row v-if="checkEmiOrCol(getSeletedUser.trmtBizCode)">
             <v-col>
               <v-card-title style="display : inline">
                 사업장 폐기물 종류
@@ -173,17 +174,36 @@
                   cols="9"
                 >
                   <div v-if="key in {'bizRegImgPath':'','permitRegImgPath':'' } ">
-                    <a
-
-                      target="_blank"
-                      :href="value"
-                      style="font-size : 11px; margin-right : 10px"
+                    <span
+                      v-if="key in {'bizRegImgPath':''}"
+                      class="span-class"
+                      @click="imgDialog1 = true"
                     >{{ value }}
-                    </a>
+
+                    </span>
+                    <span
+                      v-else
+                      class="span-class"
+                      @click="imgDialog2 = true"
+                    >{{ value }}
+
+                    </span>
 
                     <v-icon @click="changeImgae(key)">
                       mdi-pencil
                     </v-icon>
+                    <ImagePopup
+                      v-if="key in {'bizRegImgPath':''}"
+                      :dialog="imgDialog1"
+                      :img-url="value"
+                      @close="close"
+                    />
+                    <ImagePopup
+                      v-else
+                      :dialog="imgDialog2"
+                      :img-url="value"
+                      @close="close"
+                    />
                   </div>
 
                   <v-text-field
@@ -228,14 +248,17 @@
 import {mapGetters,mapMutations,mapActions} from "vuex"
 import SubHeader from "@/components/Permit2ViewC/SubHeader.vue"
 import PermitKinds2 from "@/components/Permit2ViewC/PermitKinds2.vue"
+import ImagePopup from "@/components/ContentC/ImagePopup.vue"
 
 export default {
   components : {
-    SubHeader,PermitKinds2
+    SubHeader,PermitKinds2,ImagePopup
   },
   data(){
     return  {
-      dialog : false
+      dialog : false,
+      imgDialog1 : false,
+      imgDialog2 : false,
     }
   },
 
@@ -364,6 +387,17 @@ export default {
             },
 
         }).open();
+    },
+    close(){
+      this.imgDialog1 = false
+      this.imgDialog2 = false
+    },
+    checkEmiOrCol(code){
+      console.log(code)
+      if (Number(code) == 9){
+        return false
+      }
+      return true
     }
   }
 
@@ -378,6 +412,9 @@ export default {
   line-height : 100%;
   margin-right:10px;
 
+}
+.span-class {
+  font-size : 11px; margin-right : 10px;text-decoration : underline; cursor : pointer; color : #0c0a30
 }
 #addr {
 

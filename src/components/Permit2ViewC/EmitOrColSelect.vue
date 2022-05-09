@@ -20,49 +20,49 @@ export default {
   },
 
   computed : {
-    ...mapGetters('permit2',['getConfirmedList','getConfirmedState','getSearch','getEmitColList','getEmitOrCol']),
+    ...mapGetters('permit2',['getConfirmedList','getConfirmedState','getSearch','getEmitOrCol','getEmitColList']),
     // 현재 vuex에 선택되어 있는 값을 적절한 keyword로 바꾸어
     // 기본값으로 설정
     nowValue(){
-      if(this.getConfirmedState == null){
+      if(this.getEmitOrCol == null){
         return '모두'
-      } else if (this.getConfirmedState == true){
-        return '확인만'
+      } else if (this.getEmitOrCol == true){
+        return '수거자만'
       } else {
-        return '미확인만'
+        return '배출자만'
       }
 
     }
   },
   // 확인, 미확인, 모두 3가지를 items에 넣어 표시 되도록 하였다.
   created(){
-    this.items = this.getConfirmedList.map(c => {
+    this.items = this.getEmitColList.map(c => {
       switch (c){
         case null:
           return '모두'
         case true:
-          return '확인만'
+          return '수거자만'
         case false:
-          return '미확인만'
+          return '배출자만'
       }
     })
   },
   methods : {
-    ...mapMutations('permit2',['setConfirmed']),
+    ...mapMutations('permit2',['setEmitOrCol']),
     // 변경하였을 때 한글을 적절한 값으로 바꾼 뒤
     changeValue(v){
-      let confirmed
+      let emitOrCol
       if(v == '모두'){
-        confirmed = null
-      } else if (v == '확인만'){
-        confirmed = true
+        emitOrCol = null
+      } else if (v == '수거자만'){
+        emitOrCol = true
       } else {
-        confirmed = false
+        emitOrCol = false
       }
       // 상태를 변경해주고,
-      this.setConfirmed(confirmed)
+      this.setEmitOrCol(emitOrCol)
       // vuex에 저장된 값들을 불러와서 같이 라우터 쿼리에 넣어 보내준다.
-      this.$router.push({ path: 'permit2', query: { page : 1, filter: confirmed, keyword : this.getSearch, eoc : this.getEmitOrCol }})
+      this.$router.push({ path: 'permit2', query: { page : 1, filter: this.getConfirmedState, keyword : this.getSearch, eoc : emitOrCol }})
     }
   }
 }

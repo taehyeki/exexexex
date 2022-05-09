@@ -9,6 +9,9 @@
       <v-col cols="2">
         <ConfirmedSelect />
       </v-col>
+      <v-col cols="2">
+        <EmitOrColSelect />
+      </v-col>
     </v-row>
     <PermitTable />
     <PermitNav />
@@ -19,10 +22,11 @@ import PermitNav from "@/components/Permit2ViewC/PermitNav.vue"
 import PermitTable from "@/components/Permit2ViewC/PermitTable.vue"
 import ConfirmedSelect from "@/components/Permit2ViewC/ConfirmedSelect.vue"
 import SearchBar from "@/components/Permit2ViewC/SearchBar.vue"
+import EmitOrColSelect from "@/components/Permit2ViewC/EmitOrColSelect.vue"
 import {mapActions,mapMutations} from "vuex"
 export default {
   components : {
-    PermitNav,PermitTable,ConfirmedSelect,SearchBar
+    PermitNav,PermitTable,ConfirmedSelect,SearchBar,EmitOrColSelect
   },
   watch: {
     $route(to) {
@@ -43,13 +47,16 @@ export default {
 
   },
   methods : {
-    ...mapMutations('permit2',['setPageNum','setSearch','setConfirmed']),
+    ...mapMutations('permit2',['setPageNum','setSearch','setConfirmed','setEmitOrCol']),
     ...mapActions('permit2',['getPermitsList']),
 
     controlQuerySetAndGetPermitList(querySet){
+      console.log(querySet,'쿼리셋')
       let pageToGo = Number(querySet.query.page)
+      let emitOrCol = querySet.query.eoc
       let searchKeyword = querySet.query.keyword
       let filter = querySet.query.filter
+       console.log('이거뭐냐?',emitOrCol)
       if (querySet.query.page == undefined){
         pageToGo = 1
       }
@@ -65,10 +72,18 @@ export default {
       } else if (filter == 'false'){
         filter = false
       }
+      if (emitOrCol == undefined){
+        emitOrCol = null
+      } else if (emitOrCol == 'true'){
+        emitOrCol = true
+      } else if (emitOrCol == 'false'){
+        emitOrCol = false
+      }
       // 라우터 쿼리에 담긴 값으로 검색 시작
       this.setConfirmed(filter)
       this.setSearch(searchKeyword)
       this.setPageNum(pageToGo)
+      this.setEmitOrCol(emitOrCol)
       this.getPermitsList()
     }
   },

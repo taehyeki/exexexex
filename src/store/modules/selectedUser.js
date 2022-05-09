@@ -10,7 +10,7 @@ export default {
         headOffice : null,
         permitRegCode : null,
         permitRegImgPath : null,
-
+        trmtBizCode : null ,
         addr : null,
         siteId : null,
         confirmed : null,
@@ -18,7 +18,6 @@ export default {
         manager : null,
         active : null,
         phone : null,
-        trmtBizNm : null,
         bCode : null,
         wsteList : [],
         siteList : [],
@@ -39,13 +38,13 @@ export default {
   },
   mutations : {
     setSelectedUser(state,payload){
-
       state.selectedUser.headOffice = payload.SITE_INFO[0].HEAD_OFFICE
       state.selectedUser.confirmedAt = payload.SITE_INFO[0].CONFIRMED_AT.slice(0,19)
       if (payload.SITE_INFO[0].CONFIRMED != 1){
         state.selectedUser.confirmedAt = '확인되지 않았습니다.'
       }
       state.selectedUser.confirmed = payload.SITE_INFO[0].CONFIRMED
+      state.selectedUser.trmtBizCode = payload.SITE_INFO[0].TRMT_BIZ_CODE
       state.selectedUser.active = payload.SITE_INFO[0].ACTIVE
       state.selectedUser.permitRegImgPath = payload.PERMIT_REG_IMG_PATH
       state.selectedUser.siteId = payload.SITE_ID
