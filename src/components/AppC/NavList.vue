@@ -38,8 +38,9 @@ export default {
       items : [{ title: '로그인', icon: 'mdi-account', route : '/login' }]
     }
   },
+
    computed : {
-    ...mapGetters('auth',['getUserClass']),
+    ...mapGetters('auth',['getUserClass','isLogged']),
     ...mapGetters('common',['getNavList']),
   },
   methods : {

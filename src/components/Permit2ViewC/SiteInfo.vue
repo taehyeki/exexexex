@@ -62,6 +62,37 @@
                       mdi-pencil
                     </v-icon>
                   </div>
+
+                  <!-- ######################### 담당자 ####################### -->
+                  <div v-else-if="key in {'managerList': ''}">
+                    <!-- value에는 배열이 담긴다. manager에는 오브젝트가 담긴다. PHONE, USER_NAME -->
+                    <div
+                      v-for="manager, idx in value"
+                      :key="idx"
+                    >
+                      <v-row>
+                        <!-- 2가지 필드를 적용한다. 아이디를 다르게 하기위함 input에는 보통 key를 넣었지만 여기에는 idx를 넣어 판별-->
+                        <v-col>
+                          <v-text-field
+                            dense
+                            :value="manager.USER_NAME"
+                            hide-details=""
+                            solo
+                            @input="MyVmodel('ma'+idx,$event)"
+                          />
+                        </v-col>
+                        <v-col>
+                          <v-text-field
+                            dense
+                            :value="manager.PHONE"
+                            hide-details=""
+                            solo
+                            @input="MyVmodel('ph'+idx,$event)"
+                          />
+                        </v-col>
+                      </v-row>
+                    </div>
+                  </div>
                   <v-text-field
                     v-else-if="key == 'confirmedAt'"
                     :id="key"
@@ -261,8 +292,6 @@ export default {
       imgDialog2 : false,
     }
   },
-
-
     computed : {
     ...mapGetters('selectedUser',['getLine1','getLine2','getSeletedUser'])
   },
@@ -340,7 +369,6 @@ export default {
       // eslint-disable-next-line no-undef
         new daum.Postcode({
             oncomplete: (data) => {
-                console.log(data)
                 let fullRoadAddr = data.roadAddress; // 도로명 주소 변수
                 let extraRoadAddr = ''; // 도로명 조합형 주소 변수
                 // 법정동명이 있을 경우 추가한다. (법정리는 제외)
@@ -393,7 +421,6 @@ export default {
       this.imgDialog2 = false
     },
     checkEmiOrCol(code){
-      console.log(code)
       if (Number(code) == 9){
         return false
       }

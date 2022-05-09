@@ -63,7 +63,6 @@ export default {
   },
   getters : {
     getUserClass(state){
-      console.log(state)
       if (state.class == null){
         return '로그인을 해주세요.'
       }
@@ -73,6 +72,7 @@ export default {
       return '일반 관리자'
     },
     isLogged(state){
+
       if (state.userId){
         return true
       }

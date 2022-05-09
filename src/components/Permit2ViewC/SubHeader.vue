@@ -41,6 +41,9 @@
   <v-subheader v-else-if="title == 'confirmed'">
     확인 상태
   </v-subheader>
+  <v-subheader v-else-if="title == 'managerList'">
+    담당자
+  </v-subheader>
 </template>
 <script>
 export default {
