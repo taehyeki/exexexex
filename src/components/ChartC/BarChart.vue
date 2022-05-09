@@ -12,12 +12,12 @@
           solo
           hide-details=""
           style="width : 150px"
-          @change="changeYear"
         />
       </v-col>
       <v-col cols="auto">
         <v-select
-          :items="month"
+          v-model="nowMonth"
+          :items="getBarMonth"
           label="월별"
           hide-details=""
           style="width : 150px"
@@ -34,8 +34,9 @@
       {{ title }}
     </h2>
     <Bar
+      v-if="loaded"
       :chart-options="chartOptions"
-      :chart-data="chartData"
+      :chart-data="getDataSet"
       :height="height"
     />
   </div>
@@ -43,7 +44,7 @@
 
 <script>
 import { Bar } from 'vue-chartjs/legacy'
-import { mapGetters } from "vuex"
+import { mapGetters, mapActions, mapMutations } from "vuex"
 import {
   Chart as ChartJS,
   Title,
@@ -74,94 +75,35 @@ export default {
 
   data() {
     return {
-      nowYear : '',
+      nowYear : 2022,
+      nowMonth : '전체',
       month : [],
       years : [2022],
-      loaded : false,
-      chartData: {
-        labels: [
-          '1월',
-          '2월',
-          '3월',
-          '4월',
-          '5월',
-          '6월',
-          '7월',
-          '8월',
-          '9월',
-          '10월',
-          '11월',
-          '12월'
-        ],
-        title : {
-          display : true,
-          text : '안녕'
-        },
-        datasets: [
-          {
-            label: '수거자',
-            backgroundColor: '#f87979',
-            data: [123]
-          },
-          {
-            label: '배출자',
-            backgroundColor: '#1868c1',
-            data: [51]
-          },
-
-        ],
-
-      },
-
+      loaded : true,
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-
-        tooltips: {
-         callbacks: {
-            title: function(t, d) {
-              console.log(t,d)
-               return d.labels[t[0].index];
-            }
-         }
-        },
-        scales: {
-         xAxes: [{
-            ticks: {
-               callback: function(t) {
-                 console.log(t)
-                  var maxLabelLength = 3;
-                  if (t.length > maxLabelLength) return t.substr(0, maxLabelLength) + '...';
-                  else return t;
-               }
-            }
-         }],
-         yAxes: [{
-            ticks: {
-               beginAtZero: true,
-               stepSize: 1
-            }
-         }]
-      },
-      legend: {
-         display: false
-      },
       }
     }
   },
   computed : {
-    ...mapGetters('chart',['getNowYear'])
-  },
-  created(){
-    this.nowYear = this.getNowYear
+    ...mapGetters('chart',['getNowYear','getBarMonth','getEmitColMonth','getBarTotalDay','getBarTotalMonth','getEmitColDay','getDataSet'])
   },
 
+
   methods : {
-    changeYear(e){
-      console.log(e)
-    },
-    sendYearMonth(){
-      console.log(this.nowYear)
+    ...mapActions('chart',['getBarChartInfo']),
+    ...mapMutations('chart',['setNowYear','setNowMonth']),
+    async sendYearMonth(){
+      this.loaded = false
+      this.setNowYear(this.nowYear)
+      this.setNowMonth(this.nowMonth)
+      if (this.nowMonth == '전체'){
+        this.setNowMonth(null)
+      }
+      await this.getBarChartInfo()
+      this.loaded = true
+
     }
   },
 }
