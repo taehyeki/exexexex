@@ -14,6 +14,13 @@ export default {
     isYearOrMonth : true,
   },
   getters: {
+    getTitle(state,getters){
+      if (getters.getNowMonth == null){
+        return `${getters.getNowYear}년 수거자 배출자 등록 현황`
+      }
+      return `${getters.getNowYear}년 ${getters.getNowMonth}월 수거자 배출자 등록 현황`
+
+    },
     getNowYear(state){
       return state.nowYear
     },

@@ -1,16 +1,20 @@
 <template>
   <v-container>
     <v-card style="padding : 40px ">
-      <BarChart />
+      <BarChart :title="getTitle" />
     </v-card>
   </v-container>
 </template>
 <script>
 import BarChart from "@/components/ChartC/BarChart.vue"
-import {mapActions} from "vuex"
+import {mapActions,mapGetters} from "vuex"
 export default {
   components : {
     BarChart
+  },
+
+  computed : {
+    ...mapGetters('chart',['getTitle'])
   },
   created(){
     this.getBarChartInfo()
