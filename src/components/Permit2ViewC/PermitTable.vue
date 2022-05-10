@@ -17,10 +17,10 @@
             사이트 이름
           </th>
           <th class="text-left">
-            사업자 등록번호
+            허가증 번호
           </th>
           <th class="text-left">
-            허가증 번호
+            사업자 등록 번호
           </th>
           <th class="text-left">
             등록일자
