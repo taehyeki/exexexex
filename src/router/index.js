@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueCookies from "vue-cookies";
-
+import store from "@/store"
 Vue.use(VueRouter)
 
 const routes = [
@@ -59,6 +59,14 @@ const routes = [
               name: 'content',
               component: () => import( '../views/main2Views/PermitContent.vue'),
 
+            },
+            {
+
+              path: 'add-admin',
+              name: 'content',
+              component: () => import( '../views/main2Views/addAdmin.vue'),
+              // 최고 권한자만 들어갈 수 있도록 표시
+              meta: { adminKing : true },
             }
           ]
           }
@@ -99,7 +107,16 @@ router.beforeEach( async(to, from, next) => {
   if (to.name == 'login' && VueCookies.get('token')){
     return next('/admin/main2/permit2');
   }
-
+  // 최고 권한자인지 라우터에서 판별,
+  if (to.matched.some(record => record.meta.adminKing)){
+    // 최고 권한자라면 들어갈 수 있도록
+    if (store.getters['auth/canYouComeHere1']){
+      next()
+    }else {
+      alert('권한이 없습니다.')
+      return next(from);
+    }
+  }
 
   return next();
 

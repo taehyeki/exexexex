@@ -22,12 +22,8 @@
           hide-details=""
           style="width : 150px"
           solo
+          @change="sendYearMonth"
         />
-      </v-col>
-      <v-col cols="auto">
-        <v-btn @click="sendYearMonth">
-          선택 🚀
-        </v-btn>
       </v-col>
     </v-row>
     <h2 class="text-center mb-4">
@@ -94,6 +90,7 @@ export default {
   methods : {
     ...mapActions('chart',['getBarChartInfo']),
     ...mapMutations('chart',['setNowYear','setNowMonth']),
+
     async sendYearMonth(){
       this.loaded = false
       this.setNowYear(this.nowYear)
@@ -103,7 +100,6 @@ export default {
       }
       await this.getBarChartInfo()
       this.loaded = true
-
     }
   },
 }

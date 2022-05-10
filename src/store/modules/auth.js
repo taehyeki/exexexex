@@ -77,6 +77,12 @@ export default {
         return true
       }
       return false
+    },
+    canYouComeHere1(state){
+      if (state.class == 101){
+        return true
+      }
+      return false
     }
   }
 }
