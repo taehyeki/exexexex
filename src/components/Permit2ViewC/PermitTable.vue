@@ -17,10 +17,10 @@
             사이트 이름
           </th>
           <th class="text-left">
-            허가증 번호
+            사업자 등록 번호
           </th>
           <th class="text-left">
-            사업자 등록 번호
+            허가증 번호
           </th>
           <th class="text-left">
             등록일자
@@ -37,8 +37,8 @@
           <td>{{ item.SITE_ID }}</td>
           <td>{{ checkEmOrCol(item.SITE_INFO[0].TRMT_BIZ_CODE) }} {{ checkPerOrCor(item.SITE_ID) }}</td>
           <td>{{ item.SITE_NAME }}</td>
-          <td>{{ item.PERMIT_REG_CODE }}</td>
           <td>{{ item.COMPANY_INFO[0].BIZ_REG_CODE }}</td>
+          <td>{{ item.PERMIT_REG_CODE }}</td>
           <td>{{ getTime(item.CREATED_AT) }}</td>
         </tr>
       </tbody>
