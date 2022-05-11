@@ -31,6 +31,7 @@
     </h2>
     <Bar
       v-if="loaded"
+
       :chart-options="chartOptions"
       :chart-data="getDataSet"
       :height="height"

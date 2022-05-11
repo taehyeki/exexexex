@@ -1,387 +1,407 @@
-import myAxios from "@/api"
+import myAxios from "@/api";
 
 // 시도 시군구 세팅하는 곳
-const sidoSetFun = (stats,commit) => {
-  let emptyEmiArr =[]
-  let emptyColArr =[]
-  let tempSet = new Set()
-  for( const stat of stats){
-    tempSet.add(stat.REGION)
-    emptyEmiArr.push(stat.EMI)
-    emptyColArr.push(stat.COL)
+const sidoSetFun = (stats, commit) => {
+  let emptyEmiArr = [];
+  let emptyColArr = [];
+  let tempSet = new Set();
+  for (const stat of stats) {
+    tempSet.add(stat.REGION);
+    emptyEmiArr.push(stat.EMI);
+    emptyColArr.push(stat.COL);
   }
-  commit('setSidoOrSigunguEmit',emptyEmiArr)
-  commit('setSidoOrSigunguCol',emptyColArr)
-  commit('setSidoOrSigungu',tempSet)
-}
+  commit("setSidoOrSigunguEmit", emptyEmiArr);
+  commit("setSidoOrSigunguCol", emptyColArr);
+  commit("setSidoOrSigungu", tempSet);
+};
 
 export default {
-  namespaced : true,
+  namespaced: true,
   state: {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    calendarBar : {
-      nowYear : new Date().getFullYear(),
-      nowMonth : null,
-      barMonth : [],
-      barEmitMonth : [0,0,0,0,0,0,0,0,0,0,0,0],
-      barColMonth : [0,0,0,0,0,0,0,0,0,0,0,0],
-      barEmitDay : [],
-      barColDay : [],
-      barTotalDay : [''],
-      isYearOrMonth : true,
+    calendarBar: {
+      // 현재 2022년이므로 일단 고정
+      nowYear: new Date().getFullYear(),
+      // 선택된 월
+      nowMonth: null,
+      // 자료가 있는 월만 표시
+      barMonth: [],
+      // 1월부터 12월까지 배출자를 표시하기 위한 세팅
+      barEmitMonth: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      // 1월부터 12월까지 수거자를 표시하기 위한 세팅
+      barColMonth: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      // 1일 부터 28 ~ 31일 까지 배출자를 보여주기 위한 라벨 세팅
+      barEmitDay: [],
+      // 1일 부터 28 ~ 31일 까지 수거자를 보여주기 위한 라벨 세팅
+      barColDay: [],
+      // 보통 mounted에 값을 설정하고 getter을 사용하면,
+      // getter의 값은 undefined 라고 나오기 때문에, mounted에 사용하지 않고
+      // getter을 바로 값에 대입하였음
+      // 1일 부터 28 ~ 31일 까지 수거자를 보여주기 위한 데이터 세팅
+      barTotalDay: [""],
+      // 전체인지, 특정 월을 선택한 것인지, true면 전체, false면 특정 월
+      isYearOrMonth: true,
     },
-    sidoBar : {
+    sidoBar: {
       // 지금 체크된 지역 (시도)
-      nowChecked : null,
+      nowChecked: null,
       // region code 받기 위해 초기값 설정
-      geonkuk : null,
+      geonkuk: null,
       // 배출자
-      emitter : [],
+      emitter: [],
       // 수거자
-      collector : [],
+      collector: [],
       // 라벨에 붙일 시도 or 시군구
-      sidoOrSigungu : [],
+      sidoOrSigungu: [],
       // db에 요청 보낼 code
-      regionCode : null,
-    }
-
+      regionCode: null,
+    },
   },
   getters: {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    getTitle(state,getters){
-      if (getters.getNowMonth == null){
-        return `${getters.getNowYear}년 수거자 배출자 등록 현황`
+    getTitle(state, getters) {
+      if (getters.getNowMonth == null) {
+        return `${getters.getNowYear}년 수거자 배출자 등록 현황`;
       }
-      return `${getters.getNowYear}년 ${getters.getNowMonth}월 수거자 배출자 등록 현황`
-
+      return `${getters.getNowYear}년 ${getters.getNowMonth}월 수거자 배출자 등록 현황`;
     },
-    getNowYear(state){
-      return state.calendarBar.nowYear
+    getNowYear(state) {
+      return state.calendarBar.nowYear;
     },
-    getNowMonth(state){
-      return state.calendarBar.nowMonth
+    getNowMonth(state) {
+      return state.calendarBar.nowMonth;
     },
-    getEmitColDay(state){
-      return { emit : state.calendarBar.barEmitDay, col : state.calendarBar.barColDay}
+    getEmitColDay(state) {
+      return {
+        emit: state.calendarBar.barEmitDay,
+        col: state.calendarBar.barColDay,
+      };
     },
     // 데이터가 있는 월 가져오기
-    getBarMonth(state){
-      return state.calendarBar.barMonth.map(v => {if (v==null) return '전체'; else return v})
+    getBarMonth(state) {
+      return state.calendarBar.barMonth.map((v) => {
+        if (v == null) return "전체";
+        else return v;
+      });
     },
-    getEmitColMonth(state){
-      return { emit : state.calendarBar.barEmitMonth, col : state.calendarBar.barColMonth}
+    getEmitColMonth(state) {
+      return {
+        emit: state.calendarBar.barEmitMonth,
+        col: state.calendarBar.barColMonth,
+      };
     },
-    getBarTotalDay(state){
-      return state.calendarBar.barTotalDay
+    getBarTotalDay(state) {
+      return state.calendarBar.barTotalDay;
     },
-    getBarTotalMonth(){
-      return  [
-        '1월',
-        '2월',
-        '3월',
-        '4월',
-        '5월',
-        '6월',
-        '7월',
-        '8월',
-        '9월',
-        '10월',
-        '11월',
-        '12월'
-      ]
+    getBarTotalMonth() {
+      return [
+        "1월",
+        "2월",
+        "3월",
+        "4월",
+        "5월",
+        "6월",
+        "7월",
+        "8월",
+        "9월",
+        "10월",
+        "11월",
+        "12월",
+      ];
     },
-    getDataSet(state,getters){
-      if (state.calendarBar.isYearOrMonth){
+    getDataSet(state, getters) {
+      if (state.calendarBar.isYearOrMonth) {
         return {
-          labels : getters.getBarTotalMonth,
+          labels: getters.getBarTotalMonth,
           datasets: [
-
             {
-              label: '배출자',
-              backgroundColor: '#1868c1',
-              data: getters.getEmitColMonth.emit
+              label: "배출자",
+              backgroundColor: "#1868c1",
+              data: getters.getEmitColMonth.emit,
             },
             {
-              label: '수거자',
-              backgroundColor: '#f87979',
-              data: getters.getEmitColMonth.col
+              label: "수거자",
+              backgroundColor: "#f87979",
+              data: getters.getEmitColMonth.col,
             },
           ],
-        }
+        };
       }
       return {
         labels: getters.getBarTotalDay,
         datasets: [
-
           {
-            label: '배출자',
-            backgroundColor: '#1868c1',
-            data: getters.getEmitColDay.emit
+            label: "배출자",
+            backgroundColor: "#1868c1",
+            data: getters.getEmitColDay.emit,
           },
           {
-            label: '수거자',
-            backgroundColor: '#f87979',
-            data: getters.getEmitColDay.col
+            label: "수거자",
+            backgroundColor: "#f87979",
+            data: getters.getEmitColDay.col,
           },
         ],
-      }
+      };
     },
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    getSidoOrSigungu(state){
-      return state.sidoBar.sidoOrSigungu
+
+    // 시도 or 시군구 라벨 getter
+    getSidoOrSigungu(state) {
+      return state.sidoBar.sidoOrSigungu;
     },
-    getSidoOrSigunguEmit(state){
-      return state.sidoBar.emitter
+    // 시도 or 시군구 배출자 getter
+    getSidoOrSigunguEmit(state) {
+      return state.sidoBar.emitter;
     },
-    getSidoOrSigunguCol(state){
-      return state.sidoBar.collector
+    // 시도 or 시군구 수거자 getter
+    getSidoOrSigunguCol(state) {
+      return state.sidoBar.collector;
     },
-    getSidoOrSigunguDataSet(state,getters){
+    // 배출자, 수거자 데이터 getter
+    getSidoOrSigunguDataSet(state, getters) {
       return {
-        labels : getters.getSidoOrSigungu,
+        labels: getters.getSidoOrSigungu,
         datasets: [
-
           {
-            label: '배출자',
-            backgroundColor: '#1868c1',
+            label: "배출자",
+            backgroundColor: "#1868c1",
             data: getters.getSidoOrSigunguEmit,
-            barPercentage: 0.5
-
           },
           {
-            label: '수거자',
-            backgroundColor: '#f87979',
+            label: "수거자",
+            backgroundColor: "#f87979",
             data: getters.getSidoOrSigunguCol,
-            barPercentage: 0.5
           },
         ],
-      }
+      };
     },
-    getGeonKuk(state){
-      return state.sidoBar.geonkuk
+    // 전국 데이터 ( B_CODE, SI_DO 정보)
+    getGeonKuk(state) {
+      return state.sidoBar.geonkuk;
     },
-    getSidoTitle(state){
-      if(state.sidoBar.nowChecked==null){
-        return '전국 수거자 배출자 등록현황'
+    // Sido chart title getter
+    getSidoTitle(state) {
+      if (state.sidoBar.nowChecked == null) {
+        return "전국 수거자 배출자 등록현황";
       } else {
-        return `${state.sidoBar.nowChecked} 수거자 배출자 등록현황`
+        return `${state.sidoBar.nowChecked} 수거자 배출자 등록현황`;
       }
-
     },
-    getNowChecked(state){
-      if(state.sidoBar.nowChecked == null){
-        return '전국'
+    // 시도 어떤 것이 체크 되어 있는지
+    getNowChecked(state) {
+      if (state.sidoBar.nowChecked == null) {
+        return "전국";
       }
-      return state.sidoBar.nowChecked
-    }
+      return state.sidoBar.nowChecked;
+    },
   },
   mutations: {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    setNowYear(state,payload){
-      state.calendarBar.nowYear = payload
+    setNowYear(state, payload) {
+      state.calendarBar.nowYear = payload;
     },
-    setNowMonth(state,payload){
-      state.calendarBar.nowMonth = payload
+    setNowMonth(state, payload) {
+      state.calendarBar.nowMonth = payload;
     },
-    setBarEmitMonth(state,payload){
-      state.calendarBar.barEmitMonth = payload
+    setBarEmitMonth(state, payload) {
+      state.calendarBar.barEmitMonth = payload;
     },
-    setBarColMonth(state,payload){
-      state.calendarBar.barColMonth = payload
+    setBarColMonth(state, payload) {
+      state.calendarBar.barColMonth = payload;
     },
-    setBarEmitDay(state,payload){
-      state.calendarBar.barEmitDay = payload
+    setBarEmitDay(state, payload) {
+      state.calendarBar.barEmitDay = payload;
     },
-    setBarColDay(state,payload){
-      state.calendarBar.barColDay = payload
+    setBarColDay(state, payload) {
+      state.calendarBar.barColDay = payload;
     },
-    setMonth(state,payload){
-      state.calendarBar.barMonth = [...payload]
-      state.calendarBar.barMonth.unshift(null)
+    setMonth(state, payload) {
+      state.calendarBar.barMonth = [...payload];
+      state.calendarBar.barMonth.unshift(null);
     },
-    setBarTotalDay(state,payload){
-      state.calendarBar.barTotalDay = payload
+    setBarTotalDay(state, payload) {
+      state.calendarBar.barTotalDay = payload;
     },
-    setIsYearOrMonth(state,payload){
-      state.calendarBar.isYearOrMonth = payload
+    setIsYearOrMonth(state, payload) {
+      state.calendarBar.isYearOrMonth = payload;
     },
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    setSidoOrSigunguEmit(state,payload){
-      state.sidoBar.emitter = [...payload]
+    setSidoOrSigunguEmit(state, payload) {
+      state.sidoBar.emitter = [...payload];
     },
-    setSidoOrSigunguCol(state,payload){
-      state.sidoBar.collector =  [...payload]
+    setSidoOrSigunguCol(state, payload) {
+      state.sidoBar.collector = [...payload];
     },
-    setSidoOrSigungu(state,payload){
-      state.sidoBar.sidoOrSigungu = [...payload]
+    setSidoOrSigungu(state, payload) {
+      state.sidoBar.sidoOrSigungu = [...payload];
     },
-    setGeonKuk(state,payload){
-      state.sidoBar.geonkuk = [...payload]
-      state.sidoBar.geonkuk.unshift(null)
-
+    setGeonKuk(state, payload) {
+      state.sidoBar.geonkuk = [...payload];
+      state.sidoBar.geonkuk.unshift(null);
     },
-    setNowChecked(state,payload){
-      state.sidoBar.nowChecked = payload
+    setNowChecked(state, payload) {
+      state.sidoBar.nowChecked = payload;
     },
-    setRegionCode(state,payload){
-      const gk = [...state.sidoBar.geonkuk]
-      let rc
-      gk.map(v => {
-        if (v != null && v.SI_DO == payload){
-          rc =  v.B_CODE
+    // b_code 를 골라내기 위함
+    setRegionCode(state, payload) {
+      const gk = [...state.sidoBar.geonkuk];
+      let rc;
+      gk.map((v) => {
+        if (v != null && v.SI_DO == payload) {
+          rc = v.B_CODE;
         }
-      })
-      if (rc == undefined){
-        state.sidoBar.regionCode = null
-        return
+      });
+      if (rc == undefined) {
+        state.sidoBar.regionCode = null;
+        return;
       }
-      state.sidoBar.regionCode = String(rc)
-    }
+      state.sidoBar.regionCode = String(rc);
+    },
   },
   actions: {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    async getBarChartInfo({ rootState,commit,state }) {
-      const userId = rootState.auth.userId
-      const url = 'api/admin/common/get_stats'
-      const method = 'post'
+    async getBarChartInfo({ rootState, commit, state }) {
+      const userId = rootState.auth.userId;
+      const url = "api/admin/common/get_stats";
+      const method = "post";
       const data = {
-        params: JSON.stringify(
-          [
-            {
-              USER_ID: userId,
-              PARAM_YEAR: state.calendarBar.nowYear,
-              PARAM_MONTH: state.calendarBar.nowMonth,
-            }
-          ]
-        )
-      }
-      let res
-      const lastDay = [0,31,28,31,30,31,30,31,31,30,31,30,31]
+        params: JSON.stringify([
+          {
+            USER_ID: userId,
+            PARAM_YEAR: state.calendarBar.nowYear,
+            PARAM_MONTH: state.calendarBar.nowMonth,
+          },
+        ]),
+      };
+      let res;
+      // 1월 ~ 12월까지의 마지막 날, 인덱싱을 위해 첫 월은 0으로 지정
+      const lastDay = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
       try {
-        res = await myAxios(url, method, data)
-        const inputMonth = res.data.data[0].INPUT_PARAM[0].PARAM_MONTH
-        const stats = res.data.data[0].STAT
-        console.log(stats)
+        res = await myAxios(url, method, data);
+        const inputMonth = res.data.data[0].INPUT_PARAM[0].PARAM_MONTH;
+        const stats = res.data.data[0].STAT;
         // 년 단위
-        if (inputMonth == null){
-
-          let yearEmi = []
-          let yearCol = []
-          let setMonth = new Set()
-          for(let i=0;i<12;i++){
-            yearEmi.push(0)
-            yearCol.push(0)
+        if (inputMonth == null) {
+          // ex) 2022년 전체를 클릭하면 전체의 값이 null이기 때문에
+          // 1 ~ 12월의 데이터가 들어온다.
+          // 아래는 배출자 수거자의 값이 들어오고,
+          let yearEmi = [];
+          let yearCol = [];
+          // setMonth에는 값이 들어있는 월만 중복되지 않도록 들어온다.
+          // ex ) 3 3 4 5 라면 3,4,5월만 들어있음
+          let setMonth = new Set();
+          // 인덱싱을 위해서 0을 넣어둠
+          for (let i = 0; i < 12; i++) {
+            yearEmi.push(0);
+            yearCol.push(0);
           }
-          for (const stat  of stats) {
-            const month = stat.PARAM_MONTH - 1
-            const num = stat.QTY
-            if(stat.USER_TYPE == 9){
-              yearEmi[month] = num
+          // 반복문을 돌려가면서 배출자인지 수거자인지 판별하여 값을 입력
+          for (const stat of stats) {
+            const month = stat.PARAM_MONTH - 1;
+            const num = stat.QTY;
+            if (stat.USER_TYPE == 9) {
+              yearEmi[month] = num;
             } else {
-              yearCol[month] = num
+              yearCol[month] = num;
             }
-            setMonth.add(stat.PARAM_MONTH)
-
+            setMonth.add(stat.PARAM_MONTH);
           }
-          commit('setMonth',setMonth)
-          commit('setBarEmitMonth',yearEmi)
-          commit('setBarColMonth',yearCol)
-          commit('setIsYearOrMonth',true)
-        // 월 단위
+          // 세팅
+          commit("setMonth", setMonth);
+          commit("setBarEmitMonth", yearEmi);
+          commit("setBarColMonth", yearCol);
+          commit("setIsYearOrMonth", true);
+          // 월 단위
         } else {
-          let monthEmi = []
-          let monthCol = []
-          let setBarTotalDay = []
-
-          for(let i=0;i<lastDay[inputMonth];i++){
-            setBarTotalDay.push(i+1)
-            monthEmi.push(0)
-            monthCol.push(0)
+          // 위와 마찬가지
+          let monthEmi = [];
+          let monthCol = [];
+          let setBarTotalDay = [];
+          // 마지막 날이 월마다 다르기 때문에 일정하지 않음
+          for (let i = 0; i < lastDay[inputMonth]; i++) {
+            // 1을 더해주는 이유는 1일부터 시작하기 때문
+            setBarTotalDay.push(i + 1);
+            monthEmi.push(0);
+            monthCol.push(0);
           }
-          setBarTotalDay = setBarTotalDay.map(v => {return String(v)+'일'})
-          commit('setBarTotalDay',setBarTotalDay)
-          for (const stat  of stats) {
-
-            const day = stat.PARAM_DAY - 1
-            const num = stat.QTY
-            if(stat.USER_TYPE == 9){
-              monthEmi[day] = num
+          setBarTotalDay = setBarTotalDay.map((v) => {
+            return String(v) + "일";
+          });
+          commit("setBarTotalDay", setBarTotalDay);
+          // 반복문을 돌려 수거자 배출자인지에 따라서 분리하여 입력
+          for (const stat of stats) {
+            const day = stat.PARAM_DAY - 1;
+            const num = stat.QTY;
+            if (stat.USER_TYPE == 9) {
+              monthEmi[day] = num;
             } else {
-              monthCol[day] = num
+              monthCol[day] = num;
             }
           }
-          commit('setBarEmitDay',monthEmi)
-          commit('setBarColDay',monthCol)
-          commit('setIsYearOrMonth',false)
+          // 세팅
+          commit("setBarEmitDay", monthEmi);
+          commit("setBarColDay", monthCol);
+          commit("setIsYearOrMonth", false);
         }
-
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     },
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    async getSido({rootState,commit}){
-      const userId = rootState.auth.userId
-      const method = 'post'
-      const url = 'api/admin/common/get_sido'
-      let data =
-      {
-        params :
-          JSON.stringify(
-          [
-            {
-              USER_ID : userId,
-              REGION_CODE : null
-            }
-          ]
-        )
-      }
-      const res = await myAxios(url,method,data)
-      commit('setGeonKuk',res.data.data)
+    async getSido({ rootState, commit }) {
+      const userId = rootState.auth.userId;
+      const method = "post";
+      const url = "api/admin/common/get_sido";
+      let data = {
+        params: JSON.stringify([
+          {
+            USER_ID: userId,
+            REGION_CODE: null,
+          },
+        ]),
+      };
+      const res = await myAxios(url, method, data);
+      commit("setGeonKuk", res.data.data);
     },
-    async getCertenSidoOrSigungu({rootState,state,commit}){
-      const userId = rootState.auth.userId
-      const method = 'post'
-      const url = 'api/admin/common/get_region_stats'
-      let data =
-      {
-        params :
-          JSON.stringify(
-          [
-            {
-              USER_ID : userId,
-              REGION_CODE : state.sidoBar.regionCode
-            }
-          ]
-        )
-      }
-      const res = await myAxios(url,method,data)
-      const stats = res.data.data[0].STAT
+    async getCertenSidoOrSigungu({ rootState, state, commit }) {
+      const userId = rootState.auth.userId;
+      const method = "post";
+      const url = "api/admin/common/get_region_stats";
+      let data = {
+        params: JSON.stringify([
+          {
+            USER_ID: userId,
+            REGION_CODE: state.sidoBar.regionCode,
+          },
+        ]),
+      };
+      const res = await myAxios(url, method, data);
+      const stats = res.data.data[0].STAT;
       // 전국 시/도 기준
-      if (state.sidoBar.regionCode == null){
-        console.log(stats)
-        sidoSetFun(stats,commit)
-      // 시군구 시군
+      if (state.sidoBar.regionCode == null) {
+        console.log(stats);
+        sidoSetFun(stats, commit);
+        // 시군구 시군
       } else {
         //세종일 때 널들어옴
-        if (stats != null){
-          sidoSetFun(stats,commit)
+        if (stats != null) {
+          sidoSetFun(stats, commit);
         }
       }
-    }
+    },
   },
-}
+};
