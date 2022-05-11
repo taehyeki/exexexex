@@ -1,5 +1,8 @@
 <template>
-  <div class="container-box">
+  <div
+    class="container-box"
+    fluid
+  >
     <v-sheet style="width:50%">
       <LoginForm />
     </v-sheet>
