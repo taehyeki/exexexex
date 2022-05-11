@@ -51,12 +51,10 @@ export default {
     ...mapActions('permit2',['getPermitsList']),
 
     controlQuerySetAndGetPermitList(querySet){
-      console.log(querySet,'쿼리셋')
       let pageToGo = Number(querySet.query.page)
       let emitOrCol = querySet.query.eoc
       let searchKeyword = querySet.query.keyword
       let filter = querySet.query.filter
-       console.log('이거뭐냐?',emitOrCol)
       if (querySet.query.page == undefined){
         pageToGo = 1
       }

@@ -84,6 +84,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    {{ showWsteLists.wsteList1 }}
   </v-row>
 </template>
 <script>
@@ -113,6 +114,7 @@ export default {
 
     },
   created(){
+    console.log(this.showWsteLists,'이거 널일껄?ㅋㅋ')
     this.cloneWsteList1 = this.showWsteLists.wsteList1
     this.cloneWsteList2 = this.showWsteLists.wsteList2
   },
@@ -150,14 +152,12 @@ export default {
             alert('동일한 내역이 존재합니다')
             return
           }
-          console.log('여기??')
           this.addWsteList({
             WSTE_NM : this.wste1.NAME,
             WSTE_CODE: this.wste1.CODE,
             APPR_NM: this.wste2.NAME,
             APPR_CODE :this.wste2.ID,
             })
-            console.log('여기??')
           this.$emit('close-dialog')
         }else {
           this.$emit('close-dialog')

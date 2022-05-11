@@ -140,8 +140,8 @@ export default {
   },
   actions: {
     // 허가증 받아오는 함수
-    async getPermits({ state, commit }, payload) {
-      console.log("데이터를 요청하고 mutation을 호출하는 구간");
+    async getPermits({ state, commit, rootState }, payload) {
+      const userId = rootState.auth.userId;
       if (state.now !== payload) {
         commit("changeState");
       }
@@ -152,7 +152,7 @@ export default {
       let data = {
         params: JSON.stringify([
           {
-            USER_ID: 238,
+            USER_ID: userId,
             SEARCH: null,
             OFFSET_SIZE: state.permitObj.offsetSize,
             PAGE_SIZE: state.permitObj.pageSize,
@@ -164,7 +164,7 @@ export default {
         data = {
           params: JSON.stringify([
             {
-              USER_ID: 238,
+              USER_ID: userId,
               SEARCH: state.search.keyword,
               OFFSET_SIZE: 0,
               PAGE_SIZE: 100,
@@ -177,13 +177,14 @@ export default {
       console.log(JSON.parse(res.data.data[0].SITE_LISTS), "받아온 데이터들");
       commit("setPermitList", JSON.parse(res.data.data[0].SITE_LISTS));
     },
-    async sendModifiedPermit({ state, commit }) {
+    async sendModifiedPermit({ state, commit,rootState }) {
+      const userId = rootState.auth.userId;
       const method = "post";
       const url = "api/admin/1_03_main/update_site_info";
       const data = {
         params: JSON.stringify([
           {
-            USER_ID: 238,
+            USER_ID: userId,
             SITE_ID: state.selectedPermit.siteId,
             BIZ_REG_CODE: state.selectedPermit.bizRegCode,
             BIZ_REG_IMG_PATH: state.selectedPermit.bizRegImgPath,

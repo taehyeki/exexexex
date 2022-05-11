@@ -1,9 +1,8 @@
-import myAxios from "@/api";
-
-const method = "post";
+import selectedUserApi from "@/api/apiList/selectedUserApi";
 
 export default {
   namespaced: true,
+  // 게시판에서 선택된 곳의 정보를 입력하는 곳
   state: {
     selectedUser: {
       siteName: null,
@@ -36,7 +35,9 @@ export default {
   },
   mutations: {
     setSelectedUser(state, payload) {
+      // 헤드오피스 인지 아닌지,
       state.selectedUser.headOffice = payload.SITE_INFO[0].HEAD_OFFICE;
+      // 확정날짜
       state.selectedUser.confirmedAt = payload.SITE_INFO[0].CONFIRMED_AT.slice(
         0,
         19
@@ -45,31 +46,46 @@ export default {
       if (payload.SITE_INFO[0].CONFIRMED != 1) {
         state.selectedUser.confirmedAt = "확인되지 않았습니다.";
       }
+      // 확정 유무
       state.selectedUser.confirmed = payload.SITE_INFO[0].CONFIRMED;
       state.selectedUser.trmtBizCode = payload.SITE_INFO[0].TRMT_BIZ_CODE;
+      // 활성화 유무
       state.selectedUser.active = payload.SITE_INFO[0].ACTIVE;
+      // 허가증 이미지 경로
       state.selectedUser.permitRegImgPath = payload.PERMIT_REG_IMG_PATH;
+      // 사이트 아이디
       state.selectedUser.siteId = payload.SITE_ID;
+      // 허가증 등록번호
       state.selectedUser.permitRegCode = payload.PERMIT_REG_CODE;
+      // 주소
       state.selectedUser.addr = payload.ADDR;
+      // 사이트 이름
       state.selectedUser.siteName = payload.SITE_NAME;
+      // 컴퍼니 이름
       state.selectedUser.compName = payload.COMPANY_INFO[0].COMP_NAME;
+      // 대표자 이름
       state.selectedUser.repName = payload.COMPANY_INFO[0].REP_NAME;
+      // 사업자 등록증 번호
       state.selectedUser.bizRegCode = payload.COMPANY_INFO[0].BIZ_REG_CODE;
-      state.selectedUser.bizRegImgPath =
-        payload.COMPANY_INFO[0].BIZ_REG_IMG_PATH;
-      (state.selectedUser.bCode = payload.B_CODE),
-        (state.selectedUser.updatedAt = payload.UPDATED_AT.slice(0, 19));
+      // 사업자 등록증 이미지 경로
+      state.selectedUser.bizRegImgPath = payload.COMPANY_INFO[0].BIZ_REG_IMG_PATH;
+      // B_CODE
+      state.selectedUser.bCode = payload.B_CODE,
+      // 최종 수정 날짜
+      state.selectedUser.updatedAt = payload.UPDATED_AT.slice(0, 19);
+      // 배출 리스트
       state.selectedUser.wsteList = payload.WSTE_INFO;
+      // 위도 경도
       state.selectedUser.lat = payload.SITE_INFO[0].LAT;
       state.selectedUser.lng = payload.SITE_INFO[0].LNG;
+      // 근처 사이트
       state.selectedUser.siteList = payload.SITE_LIST;
       // 값이 null 일때에도 배열상태를 유지하기 위해
       if (payload.MANAGER_LIST == null) {
         state.selectedUser.managerList = [];
       }
       // 이 문장을 if문 위에다 두면 null일 경우에 map함수를 돌리려고 할 것이고, 이로인해 오류가 발생할 것 같으므로 아래에다 두었다.
-      state.selectedUser.managerList = payload.MANAGER_LIST.map((item) => {
+      state.selectedUser.managerList = state.selectedUser.managerList.map((item) => {
         return { PHONE: item.PHONE, USER_NAME: item.USER_NAME, ID: item.ID };
       });
       if (payload.WSTE_INFO == null) {
@@ -79,8 +95,9 @@ export default {
         state.selectedUser.siteList = [];
       }
     },
+    // 정보 변경
     changeSelectedUserInfo(state, { key, value }) {
-      //
+      // 담당자명, 핸드폰 수정할 경우 if문을 탄다.
       if (key.slice(0, 2) == "ph") {
         // 2자리 숫자 까지 읽어옴
         const idx = Number(key.slice(2, 4));
@@ -122,111 +139,47 @@ export default {
     },
   },
   actions: {
-    async getSelectedUserInfo({ state, commit }, { siteId }) {
+    async getSelectedUserInfo({ state, commit, rootState }, { siteId }) {
       try {
-        const url = "api/admin/1_03_main/get_site_info";
-        const data = {
-          params: JSON.stringify([
-            {
-              USER_ID: 238,
-              SITE_ID: Number(siteId),
-              TYPE_INDEX: state.typeIndex,
-              CIRCLE_RANGE: state.circleRange,
-            },
-          ]),
-        };
-
-        const res = await myAxios(url, method, data);
+        const res = await selectedUserApi.getSelectedUserInfo({state,rootState,siteId})
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0];
-        console.log(siteInfo);
         await commit("setSelectedUser", siteInfo);
       } catch (e) {
-        console.log("토큰 갱신 한번더 실행해주세요.");
+        console.log(e);
       }
     },
 
     async uploadPermitImgToS3({ commit }, payload) {
-      const method = "post";
-      const url = "api/admin/common/upload_img_to_s3";
-      const config = {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      };
       try {
-        const res = await myAxios(url, method, payload, config);
+        const res = await selectedUserApi.uploadPermitImgToS3({payload});
         commit("setPermitImg", res.data);
       } catch (e) {
         console.log(e);
       }
     },
     async uploadBizImgToS3({ commit }, payload) {
-      const method = "post";
-      const url = "api/admin/common/upload_img_to_s3";
-      const config = {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      };
       try {
-        const res = await myAxios(url, method, payload, config);
+        const res = await selectedUserApi.uploadBizImgToS3({payload});
         commit("setBizImg", res.data);
       } catch (e) {
         console.log(e);
       }
     },
-    async sendModifiedPermit({ state }) {
-      const method = "post";
-      const url = "api/admin/1_03_main/update_site_info";
-      const data = {
-        params: JSON.stringify([
-          {
-            USER_ID: 238,
-            SITE_ID: state.selectedUser.siteId,
-            BIZ_REG_CODE: state.selectedUser.bizRegCode,
-            BIZ_REG_IMG_PATH: state.selectedUser.bizRegImgPath,
-            PERMIT_REG_CODE: state.selectedUser.permitRegCode,
-            PERMIT_REG_IMG_PATH: state.selectedUser.permitRegImgPath,
-            REP_NAME: state.selectedUser.repName,
-            B_CODE: state.selectedUser.bCode,
-            ADDR: state.selectedUser.addr,
-            WSTE_LIST: state.selectedUser.wsteList,
-            LAT: state.selectedUser.lat,
-            LNG: state.selectedUser.lng,
-            COMP_NAME: state.selectedUser.compName,
-            SITE_NAME: state.selectedUser.siteName,
-            CONFIRMED: state.selectedUser.confirmed,
-            HEAD_OFFICE: state.selectedUser.headOffice,
-            MANAGER_LIST: state.selectedUser.managerList,
-            MANAGER_ID: 0,
-          },
-        ]),
-      };
-      await myAxios(url, method, data);
+    async sendModifiedPermit({ state, rootState }) {
+      try {
+        await selectedUserApi.sendModifiedPermit({state,rootState});
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
 
-      // const modifiedRawData = res.data.data[0]
-      // const payload = {
-      //   PERMIT_REG_CODE : modifiedRawData.PERMIT_REG_CODE,
-      //   PERMIT_REG_IMG_PATH : modifiedRawData.PERMIT_REG_IMG_PATH,
-      //   ADDR : modifiedRawData.ADDR,
-      //   SITE_NAME : modifiedRawData.SITE_NAME,
-      //   COMPANY_INFO :  modifiedRawData.COMPANY_INFO,
-      //   SITE_ID : modifiedRawData.SITE_ID,
-      //   B_CODE : modifiedRawData.B_CODE,
-      //   UPDATED_AT : modifiedRawData.UPDATED_AT,
-      //   WSTE_INFO : modifiedRawData.WSTE_INFO,
-      //   SITE_INFO : modifiedRawData.SITE_INFO,
-      //   SITE_LIST : modifiedRawData.SITE_LIST
-      // }
-
-      // commit('setSelectedUser',modifiedRawData)
-      window.location.reload();
     },
   },
   getters: {
     getSeletedUser(state) {
       return state.selectedUser;
     },
+    // 맨 위에 나타낼 정보
     getLine1(state) {
       return {
         compName: state.selectedUser.compName,
@@ -241,6 +194,7 @@ export default {
         confirmed: state.selectedUser.confirmed,
       };
     },
+    // 두 번째 나타낼 정보
     getLine2(state) {
       return {
         bizRegCode: state.selectedUser.bizRegCode,

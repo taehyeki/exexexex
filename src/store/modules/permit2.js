@@ -1,4 +1,7 @@
-import myAxios from "@/api";
+// import myAxios from "@/api";
+// 게시판
+import permit2Api from '@/api/apiList/permit2Api'
+
 
 export default {
   namespaced: true,
@@ -7,11 +10,13 @@ export default {
       pageOffset: 0,
       pageSize: 15,
       permitList: [],
+      // 아래는 검색 옵션
       confirmed: null,
       emitOrCol: null,
       pageNum: 1,
       lastPageNum: 10,
     },
+    // 검색 옵션
     confirmedList: [null, true, false],
     emitOrColList: [null, true, false],
     search: null,
@@ -54,32 +59,13 @@ export default {
   },
   actions: {
     // db에 data를 요청하는 action
-    async getPermitsList({ state, commit }) {
-      const method = "post";
-      const url = "api/admin/1_03_main/get_permits";
-      let data = {
-        params: JSON.stringify([
-          {
-            USER_ID: 238,
-            SEARCH: state.search,
-            OFFSET_SIZE: state.permitObj.pageOffset,
-            PAGE_SIZE: state.permitObj.pageSize,
-            CONFIRMED: state.permitObj.confirmed,
-            EMIT_OR_COL: state.permitObj.emitOrCol,
-          },
-        ]),
-      };
-      console.log(data, "데이터 보낸");
-      // 데이터를 요청한 뒤
+    async getPermitsList({ state, commit, rootState }) {
       try {
-        const res = await myAxios(url, method, data);
-        console.log(JSON.parse(res.data.data[0].SITE_LISTS), "데이터 받은");
+        const res = await permit2Api.getPermitsList({state, rootState})
         commit("setPermitList", JSON.parse(res.data.data[0].SITE_LISTS));
       } catch (e) {
         console.log(e);
       }
-
-      // 받아온 값을 mutation을 사용하여 vuex에 저장
     },
   },
   getters: {

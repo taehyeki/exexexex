@@ -1,4 +1,4 @@
-import myAxios from "@/api";
+import chartApi from "@/api/apiList/chartApi";
 
 // 시도 시군구 세팅하는 곳
 const sidoSetFun = (stats, commit) => {
@@ -125,7 +125,7 @@ export default {
             },
             {
               label: "수거자",
-              backgroundColor: "#f87979",
+              backgroundColor: "#01b286",
               data: getters.getEmitColMonth.col,
             },
           ],
@@ -141,7 +141,7 @@ export default {
           },
           {
             label: "수거자",
-            backgroundColor: "#f87979",
+            backgroundColor: "#01b286",
             data: getters.getEmitColDay.col,
           },
         ],
@@ -175,7 +175,7 @@ export default {
           },
           {
             label: "수거자",
-            backgroundColor: "#f87979",
+            backgroundColor: "#01b286",
             data: getters.getSidoOrSigunguCol,
           },
         ],
@@ -273,23 +273,10 @@ export default {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     async getBarChartInfo({ rootState, commit, state }) {
-      const userId = rootState.auth.userId;
-      const url = "api/admin/common/get_stats";
-      const method = "post";
-      const data = {
-        params: JSON.stringify([
-          {
-            USER_ID: userId,
-            PARAM_YEAR: state.calendarBar.nowYear,
-            PARAM_MONTH: state.calendarBar.nowMonth,
-          },
-        ]),
-      };
-      let res;
-      // 1월 ~ 12월까지의 마지막 날, 인덱싱을 위해 첫 월은 0으로 지정
-      const lastDay = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
       try {
-        res = await myAxios(url, method, data);
+        // 1월 ~ 12월까지의 마지막 날, 인덱싱을 위해 첫 월은 0으로 지정
+        const lastDay = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const res = await chartApi.getBarChartInfo({state, rootState});
         const inputMonth = res.data.data[0].INPUT_PARAM[0].PARAM_MONTH;
         const stats = res.data.data[0].STAT;
         // 년 단위
@@ -362,38 +349,28 @@ export default {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    // 시도 정보 가져옴
     async getSido({ rootState, commit }) {
-      const userId = rootState.auth.userId;
-      const method = "post";
-      const url = "api/admin/common/get_sido";
-      let data = {
-        params: JSON.stringify([
-          {
-            USER_ID: userId,
-            REGION_CODE: null,
-          },
-        ]),
-      };
-      const res = await myAxios(url, method, data);
-      commit("setGeonKuk", res.data.data);
+      try{
+        const res = await chartApi.getSido({rootState})
+        commit("setGeonKuk", res.data.data);
+      } catch (e){
+        console.log(e)
+      }
     },
+    // 시군구 정보를 가져옴
     async getCertenSidoOrSigungu({ rootState, state, commit }) {
-      const userId = rootState.auth.userId;
-      const method = "post";
-      const url = "api/admin/common/get_region_stats";
-      let data = {
-        params: JSON.stringify([
-          {
-            USER_ID: userId,
-            REGION_CODE: state.sidoBar.regionCode,
-          },
-        ]),
-      };
-      const res = await myAxios(url, method, data);
+      let res
+      try{
+        res = await chartApi.getCertenSidoOrSigungu({rootState, state});
+      }
+      catch (e) {
+        console.log(e)
+      }
       const stats = res.data.data[0].STAT;
       // 전국 시/도 기준
       if (state.sidoBar.regionCode == null) {
-        console.log(stats);
         sidoSetFun(stats, commit);
         // 시군구 시군
       } else {
