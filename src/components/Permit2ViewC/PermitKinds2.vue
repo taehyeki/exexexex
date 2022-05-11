@@ -84,7 +84,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    {{ showWsteLists.wsteList1 }}
   </v-row>
 </template>
 <script>
@@ -114,7 +113,6 @@ export default {
 
     },
   created(){
-    console.log(this.showWsteLists,'이거 널일껄?ㅋㅋ')
     this.cloneWsteList1 = this.showWsteLists.wsteList1
     this.cloneWsteList2 = this.showWsteLists.wsteList2
   },

@@ -18,8 +18,6 @@ export default {
     setWsteLists(state, payload) {
       state.wsteList1 = payload.wste1;
       state.wsteList2 = payload.wste2;
-      console.log(state.wsteList1,'맞냐')
-      console.log(state.wsteList2,'만쟈')
     },
     setNavItems(state, isLogged) {
       if (isLogged) {
@@ -59,15 +57,10 @@ export default {
       // 처음에 에러코드 널 떨어짐!!!💢💥
       try {
         wste1 = await myAxios(url, method);
-        console.log(wste1,'처음값')
-
         wste2 = await myAxios(url2, method);
-        console.log(wste2,'처음값')
       } catch (e) {
         console.log(e)
       }
-      console.log(wste1.data.data,'이게 널이라고?')
-      console.log(wste2.data.data,'이게 널이라고?')
       commit("setWsteLists", {
         wste1: wste1.data.data,
         wste2: wste2.data.data,

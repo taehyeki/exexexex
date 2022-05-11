@@ -143,7 +143,7 @@ export default {
       try {
         const res = await selectedUserApi.getSelectedUserInfo({state,rootState,siteId})
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0];
-        await commit("setSelectedUser", siteInfo);
+        commit("setSelectedUser", siteInfo);
       } catch (e) {
         console.log(e);
       }

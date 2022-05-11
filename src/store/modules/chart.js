@@ -354,6 +354,7 @@ export default {
     async getSido({ rootState, commit }) {
       try{
         const res = await chartApi.getSido({rootState})
+        console.log(res)
         commit("setGeonKuk", res.data.data);
       } catch (e){
         console.log(e)
@@ -369,6 +370,8 @@ export default {
         console.log(e)
       }
       const stats = res.data.data[0].STAT;
+      console.log(stats,'스탯')
+      console.log(state.sidoBar.regionCode,'코드')
       // 전국 시/도 기준
       if (state.sidoBar.regionCode == null) {
         sidoSetFun(stats, commit);

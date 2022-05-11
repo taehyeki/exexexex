@@ -233,12 +233,14 @@
                     </v-icon>
                     <ImagePopup
                       v-if="key in {'bizRegImgPath':''}"
+
                       :dialog="imgDialog1"
                       :img-url="value"
                       @close="close"
                     />
                     <ImagePopup
                       v-else
+
                       :dialog="imgDialog2"
                       :img-url="value"
                       @close="close"

@@ -2,10 +2,15 @@
   <v-dialog
     :value="dialog"
     width="900"
+
     @click:outside="closeImgDialog"
   >
     <v-card>
-      <v-img :src="imgUrl" />
+      <v-img
+        :src="imgUrl"
+        :style="`transform: rotate(${rotation}deg)`"
+        @click="rotateRight"
+      />
     </v-card>
   </v-dialog>
 </template>
@@ -21,13 +26,23 @@ export default {
       default : ''
     }
   },
+  data(){
+    return {
+      rotation : 0
+    }
+  },
   methods : {
     closeImgDialog(){
       this.$emit('close')
+    },
+    rotateRight(){
+     this.rotation -= 90
     }
   }
 }
 </script>
-<style lang="">
-
+<style>
+.gg {
+  transform: rotate(90deg);
+}
 </style>
