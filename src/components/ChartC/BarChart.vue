@@ -15,13 +15,14 @@
         />
       </v-col>
       <v-col cols="auto">
-        <v-select
-          v-model="nowMonth"
-          :items="getBarMonth"
-          label="월별"
-          hide-details=""
-          style="width : 150px"
+        <v-autocomplete
+          dense
+          rounded
           solo
+          :items="getBarMonth"
+          hide-details=""
+          :value="getNowMonth"
+          style="width : 150px"
           @change="sendYearMonth"
         />
       </v-col>
@@ -30,8 +31,6 @@
       {{ title }}
     </h2>
     <Bar
-      v-if="loaded"
-
       :chart-options="chartOptions"
       :chart-data="getDataSet"
       :height="height"
@@ -73,10 +72,8 @@ export default {
   data() {
     return {
       nowYear : 2022,
-      nowMonth : '전체',
       month : [],
       years : [2022],
-      loaded : true,
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -84,7 +81,7 @@ export default {
     }
   },
   computed : {
-    ...mapGetters('chart',['getNowYear','getBarMonth','getEmitColMonth','getBarTotalDay','getBarTotalMonth','getEmitColDay','getDataSet'])
+    ...mapGetters('chart',['getNowYear','getBarMonth','getEmitColMonth','getBarTotalDay','getBarTotalMonth','getEmitColDay','getDataSet','getNowMonth'])
   },
 
 
@@ -92,15 +89,15 @@ export default {
     ...mapActions('chart',['getBarChartInfo']),
     ...mapMutations('chart',['setNowYear','setNowMonth']),
 
-    async sendYearMonth(){
-      this.loaded = false
+    async sendYearMonth(e){
+
       this.setNowYear(this.nowYear)
-      this.setNowMonth(this.nowMonth)
-      if (this.nowMonth == '전체'){
+      this.setNowMonth(e)
+      if (e == '전체'){
         this.setNowMonth(null)
       }
       await this.getBarChartInfo()
-      this.loaded = true
+
     }
   },
 }

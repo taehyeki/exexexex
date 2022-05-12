@@ -73,6 +73,9 @@ export default {
       return state.calendarBar.nowYear;
     },
     getNowMonth(state) {
+      if (state.calendarBar.nowMonth == null){
+        return '전체'
+      }
       return state.calendarBar.nowMonth;
     },
     getEmitColDay(state) {
@@ -209,6 +212,7 @@ export default {
       state.calendarBar.nowYear = payload;
     },
     setNowMonth(state, payload) {
+      console.log(payload)
       state.calendarBar.nowMonth = payload;
     },
     setBarEmitMonth(state, payload) {
@@ -354,7 +358,6 @@ export default {
     async getSido({ rootState, commit }) {
       try{
         const res = await chartApi.getSido({rootState})
-        console.log(res)
         commit("setGeonKuk", res.data.data);
       } catch (e){
         console.log(e)
@@ -370,8 +373,6 @@ export default {
         console.log(e)
       }
       const stats = res.data.data[0].STAT;
-      console.log(stats,'스탯')
-      console.log(state.sidoBar.regionCode,'코드')
       // 전국 시/도 기준
       if (state.sidoBar.regionCode == null) {
         sidoSetFun(stats, commit);
