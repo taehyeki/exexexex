@@ -81,13 +81,17 @@ export default {
       // 근처 사이트
       state.selectedUser.siteList = payload.SITE_LIST;
       // 값이 null 일때에도 배열상태를 유지하기 위해
+      state.selectedUser.managerList = payload.MANAGER_LIST
+
       if (payload.MANAGER_LIST == null) {
         state.selectedUser.managerList = [];
       }
+
       // 이 문장을 if문 위에다 두면 null일 경우에 map함수를 돌리려고 할 것이고, 이로인해 오류가 발생할 것 같으므로 아래에다 두었다.
       state.selectedUser.managerList = state.selectedUser.managerList.map((item) => {
         return { PHONE: item.PHONE, USER_NAME: item.USER_NAME, ID: item.ID };
       });
+
       if (payload.WSTE_INFO == null) {
         state.selectedUser.wsteList = [];
       }
@@ -143,6 +147,7 @@ export default {
       try {
         const res = await selectedUserApi.getSelectedUserInfo({state,rootState,siteId})
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0];
+        console.log(siteInfo)
         commit("setSelectedUser", siteInfo);
       } catch (e) {
         console.log(e);
