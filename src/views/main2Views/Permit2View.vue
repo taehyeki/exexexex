@@ -1,15 +1,26 @@
+/* eslint-disable vuetify/grid-unknown-attributes */
 <template>
   <div>
     <v-row style="margin-top : 10px">
-      <v-col cols="4">
+      <v-col
+
+        :md="4"
+        cols="12"
+      >
         <SearchBar />
       </v-col>
     </v-row>
     <v-row style="margin-bottom : 10px">
-      <v-col cols="2">
+      <v-col
+        cols="6"
+        :md="2"
+      >
         <ConfirmedSelect />
       </v-col>
-      <v-col cols="2">
+      <v-col
+        cols="6"
+        :md="2"
+      >
         <EmitOrColSelect />
       </v-col>
     </v-row>

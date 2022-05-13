@@ -55,6 +55,8 @@ export default {
   }
 }
 </script>
-<style lang="">
-
+<style >
+.v-subheader.theme--light {
+  padding : 0 !important;
+}
 </style>

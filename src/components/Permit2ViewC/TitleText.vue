@@ -1,7 +1,9 @@
 <template>
   <div class="title-site-name">
-    <span class="text-h5">{{ getSeletedUser.siteName }}</span>
-    <span style="font-size : 12px">최종 수정시간 : {{ getSeletedUser.updatedAt }} 🕐</span>
+    <span
+      class="text-h5"
+    >{{ getSeletedUser.siteName }}</span>
+    <span style="font-size : 10px; text-align : center;"> 수정 시각 : {{ getSeletedUser.updatedAt }} 🕐</span>
   </div>
 </template>
 <script>
@@ -17,5 +19,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom : 15px;
 }
 </style>

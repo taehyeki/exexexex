@@ -72,7 +72,11 @@
                     >
                       <v-row>
                         <!-- 2가지 필드를 적용한다. 아이디를 다르게 하기위함 input에는 보통 key를 넣었지만 여기에는 idx를 넣어 판별-->
-                        <v-col>
+                        <v-col
+                          cols="12"
+                          :sm="6"
+                          style="padding-bottom : 0px;"
+                        >
                           <v-text-field
                             :id="manager+idx"
                             dense
@@ -85,7 +89,10 @@
                             @input="MyVmodel('ma'+idx,$event)"
                           />
                         </v-col>
-                        <v-col>
+                        <v-col
+                          cols="12"
+                          :sm="6"
+                        >
                           <v-text-field
                             :id="idx+manager"
                             dense
@@ -99,6 +106,7 @@
                           />
                         </v-col>
                       </v-row>
+                      <v-divider style="margin-top : 10px" />
                     </div>
                   </div>
                   <v-text-field
@@ -457,6 +465,13 @@ export default {
 
     margin-right : 5px;
 
+}
+@media (max-width: 600px) {
+  .v-expansion-panel-content__wrap {
+      padding-left : 5px !important;
+      padding-right : 5px !important;
+
+  }
 }
 
 </style>

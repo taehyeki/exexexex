@@ -63,4 +63,11 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+@media (max-width: 600px) {
+  .top-card {
+      padding-left : 5px;
+      padding-right : 5px;
+      margin-bottom: 40px;
+  }
+}
 </style>
