@@ -26,7 +26,7 @@ instance.interceptors.response.use(
     if (response.data.errcode) {
       if (response.data.errcode == "expired") {
         const res = await axios.post(
-          "http://192.168.0.46:3000/api/admin/common/renewalToken",
+          "api/admin/common/renewalToken",
           { userId: "유저아이디" }
         );
         const token = res.data.token.token;

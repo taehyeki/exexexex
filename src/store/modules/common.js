@@ -37,6 +37,16 @@ export default {
             icon: "mdi-chart-bar",
             route: "/admin/main2/chart",
           },
+          {
+            title: "geo",
+            icon: "mdi-chart-bar",
+            route: "/admin/main2/geo/latlng",
+          },
+          {
+            title: "배출등록",
+            icon: "mdi-new-box",
+            route: "/admin/main2/emissions/list",
+          },
           { title: "로그아웃", icon: "mdi-account-cancel", route: "/logout" },
         ];
       } else {

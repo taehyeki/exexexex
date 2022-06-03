@@ -55,7 +55,9 @@
 </template>
 
 <script>
+
 import {mapGetters,mapActions} from "vuex"
+
 import NavList from "@/components/AppC/NavList"
 export default {
   name: 'App',
@@ -79,6 +81,8 @@ export default {
   created(){
     this.getWsteLists()
     this.checkIsLogged()
+
+
   },
   methods : {
     ...mapActions('common',['getWsteLists','checkIsLogged']),

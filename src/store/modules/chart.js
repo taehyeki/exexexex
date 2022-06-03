@@ -64,7 +64,7 @@ export default {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     getTitle(state, getters) {
-      if (getters.getNowMonth == null) {
+      if (getters.getNowMonth == ( null || '전체' )) {
         return `${getters.getNowYear}년 수거자 배출자 등록 현황`;
       }
       return `${getters.getNowYear}년 ${getters.getNowMonth}월 수거자 배출자 등록 현황`;

@@ -58,11 +58,37 @@ const routes = [
               },
               {
                 path: "add-admin",
-                name: "content",
+                name: "add-admin",
                 component: () => import("../views/main2Views/addAdmin.vue"),
                 // 최고 권한자만 들어갈 수 있도록 표시
                 meta: { adminKing: true },
               },
+              {
+                path: "geo",
+                name: "geo",
+                component: () => import("../views/defaultViews/ChatDefaultView.vue"),
+                children: [
+                  {
+                    path: "latlng",
+                    name: "latlng",
+                    component: () => import("../views/main2Views/LatLng.vue"),
+                  },
+                ]
+              },
+              {
+                path: "emissions",
+                name: "emissions",
+                component: () =>
+                  import("../views/defaultViews/EmissionsDefaultView.vue"),
+                children: [
+                  {
+                    path: "list",
+                    name: "emissions-list",
+                    component: () => import("../views/main2Views/EmissionsList.vue"),
+                  },
+                ]
+              },
+
             ],
           },
         ],

@@ -58,7 +58,7 @@ export default {
     },
   },
   actions: {
-    // db에 data를 요청하는 action
+    // db에 data를 요청하는
     async getPermitsList({ state, commit, rootState }) {
       try {
         const res = await permit2Api.getPermitsList({state, rootState})

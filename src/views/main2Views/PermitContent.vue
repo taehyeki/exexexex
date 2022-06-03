@@ -18,6 +18,9 @@
         </v-col>
       </v-row>
     </v-card>
+    <v-card class="top-card">
+      <EmitOrColList />
+    </v-card>
   </v-container>
 </template>
 <script>
@@ -26,12 +29,12 @@ import TitleText from "@/components/Permit2ViewC/TitleText.vue"
 import SiteMap2 from "@/components/Permit2ViewC/SiteMap2.vue"
 import OptList from "@/components/ContentC/OptList.vue"
 import mapListTable from "@/components/ContentC/mapListTable.vue"
-
+import EmitOrColList from "@/components/ContentC/EmitOrColList.vue"
 
 import {mapActions} from "vuex"
 export default {
   components : {
-    SiteInfo,TitleText,SiteMap2,OptList,mapListTable
+    SiteInfo,TitleText,SiteMap2,OptList,mapListTable,EmitOrColList
   },
   watch : {
     $route(to) {

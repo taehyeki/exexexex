@@ -29,11 +29,47 @@ export default {
       compName: null,
       repName: null,
     },
+    // 배출자 밑에 보여지는 리스트들 ( 입찰 한 사람들 ?)
+    showListIfIEmitter : {
+      orderCode : null,
+      orderId : null,
+      createdAt : null,
+      visitEndAt : null,
+      biddingEndAt : null,
+      addr : null,
+      siteName : null,
+      // 0이면 개인 0이 아니면 사업자
+      siteId : null,
+      // 0이 확인 한거, 0이 아니면 미확인
+      checkState : null,
+    },
+    showListIfIEmitterArray : [],
     typeIndex: 0,
     circleRange: 50,
     optSelect: ["거리"],
   },
   mutations: {
+    setShowListIfIEmitter(state,payload){
+
+      state.showListIfIEmitterArray = []
+      payload.forEach(i=>{
+        console.log(i,'iddd')
+        let emptyObj = {};
+        emptyObj.orderCode = i.ORDER_CODE
+        emptyObj.orderId = i.ORDER_ID
+        emptyObj.createdAt = i.CREATED_AT
+        emptyObj.visitEndAt = i.VISIT_END_AT
+        emptyObj.biddingEndAt = i.BIDDING_END_AT
+        emptyObj.addr = i.ADDR
+        emptyObj.siteName = i.SITE_NAME
+        emptyObj.siteId = i.SITE_ID
+        emptyObj.checkState = i.CHECK_STATE
+        state.showListIfIEmitterArray.push(emptyObj)
+
+      })
+
+
+    },
     setSelectedUser(state, payload) {
       // 헤드오피스 인지 아닌지,
       state.selectedUser.headOffice = payload.SITE_INFO[0].HEAD_OFFICE;
@@ -149,6 +185,7 @@ export default {
         const siteInfo = JSON.parse(res.data.data[0].SITE_INFO)[0];
         console.log(siteInfo)
         commit("setSelectedUser", siteInfo);
+        commit('setShowListIfIEmitter', siteInfo.DISPOSER_ORDER_LIST)
       } catch (e) {
         console.log(e);
       }
@@ -215,5 +252,8 @@ export default {
         optSelect: state.optSelect,
       };
     },
+    getShowListIfIEmitter(state){
+      return state.showListIfIEmitterArray
+    }
   },
 };

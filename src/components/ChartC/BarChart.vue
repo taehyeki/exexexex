@@ -77,6 +77,14 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
+        scales: {
+      y: {
+        ticks: {
+          stepSize: 1,
+          beginAtZero: true,
+        },
+      },
+    },
       }
     }
   },

@@ -299,6 +299,7 @@ import SubHeader from "@/components/Permit2ViewC/SubHeader.vue"
 import PermitKinds2 from "@/components/Permit2ViewC/PermitKinds2.vue"
 import ImagePopup from "@/components/ContentC/ImagePopup.vue"
 
+
 export default {
   components : {
     SubHeader,PermitKinds2,ImagePopup
@@ -311,7 +312,7 @@ export default {
     }
   },
     computed : {
-    ...mapGetters('selectedUser',['getLine1','getLine2','getSeletedUser'])
+    ...mapGetters('selectedUser',['getLine1','getLine2','getSeletedUser','getShowIf'])
   },
   methods : {
      ...mapMutations('selectedUser',['changeSelectedUserInfo','setAddr','removeWsteList']),
