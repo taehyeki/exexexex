@@ -22,44 +22,42 @@ const routes = [
               import("../views/defaultViews/MainDefaultView.vue"),
             children: [
               {
-                path: "index",
-                name: "index",
-                component: () => import("../views/mainViews/MainIndexView.vue"),
+                path: "person-emitter",
+                name: "person-emitter",
+                component: () => import("../views/defaultViews/PersonEmitterDefault.vue"),
+                children: [
+                  {
+                    path: "list",
+                    name: "person-emitter-list",
+                    component: () => import("../views/mainViews/PersonEmitterList.vue"),
+                  },
+                  {
+                    path: ":id",
+                    name: "person-emitter-content",
+                    component: () => import("../views/mainViews/PersonEmitterContent.vue"),
+                  },
+                ]
               },
               {
-                path: "permit",
-                name: "permit",
-                component: () =>
-                  import("../views/mainViews/mainChildViews/PermitView.vue"),
-              },
-            ],
-          },
-          {
-            path: "main2",
-            name: "main2",
-            component: () =>
-              import("../views/defaultViews/Main2DefaultView.vue"),
-            children: [
-              {
-                path: "permit2",
-                name: "permit2",
-                component: () => import("../views/main2Views/Permit2View.vue"),
+                path: "emitter-collector",
+                name: "emitter-collector",
+                component: () => import("../views/mainViews/EmitterCollectorList.vue"),
               },
               {
                 path: "chart",
                 name: "chart",
-                component: () => import("../views/main2Views/ChartView.vue"),
+                component: () => import("../views/mainViews/ChartView.vue"),
               },
               {
-                path: "content/:id",
+                path: "emitter-collector/:id",
                 name: "content",
                 component: () =>
-                  import("../views/main2Views/PermitContent.vue"),
+                  import("../views/mainViews/EmitterCollectorContent.vue"),
               },
               {
                 path: "add-admin",
                 name: "add-admin",
-                component: () => import("../views/main2Views/addAdmin.vue"),
+                component: () => import("../views/mainViews/addAdmin.vue"),
                 // 최고 권한자만 들어갈 수 있도록 표시
                 meta: { adminKing: true },
               },
@@ -71,7 +69,7 @@ const routes = [
                   {
                     path: "latlng",
                     name: "latlng",
-                    component: () => import("../views/main2Views/LatLng.vue"),
+                    component: () => import("../views/mainViews/LatLng.vue"),
                   },
                 ]
               },
@@ -84,7 +82,66 @@ const routes = [
                   {
                     path: "list",
                     name: "emissions-list",
-                    component: () => import("../views/main2Views/EmissionsList.vue"),
+                    component: () => import("../views/mainViews/EmissionsList.vue"),
+                  },
+                  {
+                    path: ":id",
+                    name: "emissions-content",
+                    component: () => import("../views/mainViews/EmissionsContent.vue"),
+                  },
+                ]
+              },
+              {
+                path: "biddings",
+                name: "biddings",
+                component: () =>
+                  import("../views/defaultViews/BiddingsDefaultView.vue"),
+                children: [
+                  {
+                    path: "list",
+                    name: "biddings-list",
+                    component: () => import("../views/mainViews/BiddingsList.vue"),
+                  },
+                  {
+                    path: ":id",
+                    name: "biddings-content",
+                    component: () => import("../views/mainViews/BiddingsContent.vue"),
+                  },
+                ]
+              },
+              {
+                path: "transaction",
+                name: "transaction",
+                component: () =>
+                  import("../views/defaultViews/TransActionDefaultView.vue"),
+                children: [
+                  {
+                    path: "list",
+                    name: "transaction-list",
+                    component: () => import("../views/mainViews/TransActionList.vue"),
+                  },
+                  {
+                    path: ":id",
+                    name: "transaction-content",
+                    component: () => import("../views/mainViews/TransActionContent.vue"),
+                  },
+                ]
+              },
+              {
+                path: "report",
+                name: "report",
+                component: () =>
+                  import("../views/defaultViews/ReportDefaultView.vue"),
+                children: [
+                  {
+                    path: "list",
+                    name: "report-list",
+                    component: () => import("../views/mainViews/ReportList.vue"),
+                  },
+                  {
+                    path: ":id",
+                    name: "report-content",
+                    component: () => import("../views/mainViews/ReportContent.vue"),
                   },
                 ]
               },
@@ -118,12 +175,12 @@ router.beforeEach(async (to, from, next) => {
   // console.log('라우터')
   if (to.matched.some((record) => record.meta.unauthorized)) {
     if (VueCookies.get("token")) {
-      return next("/admin/main2/permit2");
+      return next("/admin/main/emitter-collector");
     }
     return next();
   }
   if (to.name == "login" && VueCookies.get("token")) {
-    return next("/admin/main2/permit2");
+    return next("/admin/main/emitter-collector");
   }
   // 최고 권한자인지 라우터에서 판별,
   if (to.matched.some((record) => record.meta.adminKing)) {

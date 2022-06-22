@@ -24,7 +24,6 @@ export default {
         "content-type": "multipart/form-data",
       },
     };
-
     return myAxios(url, method, payload, config);
   },
 
@@ -43,9 +42,10 @@ export default {
     const method = "post";
     const url = "api/admin/1_03_main/update_site_info";
     const data = {
+
       params: JSON.stringify([
         {
-          USER_ID: userId,
+          ADMIN_ID: userId,
           SITE_ID: state.selectedUser.siteId,
           BIZ_REG_CODE: state.selectedUser.bizRegCode,
           BIZ_REG_IMG_PATH: state.selectedUser.bizRegImgPath,
@@ -68,4 +68,31 @@ export default {
     };
     return myAxios(url, method, data);
   },
+  personEmitter({ rootState, memberId }) {
+    const userId = rootState.auth.userId;
+    const url = "api/admin/common/sp_admin_get_personal_details";
+    const data = {
+      params: JSON.stringify([
+        {
+          USER_ID: userId,
+          MEMBER_ID: memberId,
+        },
+      ]),
+    };
+    return myAxios(url, method, data);
+  },
+  sendModifiedPersonEmitter({ rootState, userData }){
+    const userId = rootState.auth.userId;
+    const url = "api/admin/common/sp_admin_update_personal_details";
+    const data = {
+      params: JSON.stringify([
+        {
+          ADMIN_ID: userId,
+          USER_DETAILS: [userData],
+        },
+      ]),
+    };
+    return myAxios(url, method, data);
+  }
+
 };

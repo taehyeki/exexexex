@@ -79,13 +79,10 @@ export default {
     }
   },
   created(){
-    this.getWsteLists()
     this.checkIsLogged()
-
-
   },
   methods : {
-    ...mapActions('common',['getWsteLists','checkIsLogged']),
+    ...mapActions('common',['checkIsLogged']),
     toggle(){
       this.value = !this.value
     }

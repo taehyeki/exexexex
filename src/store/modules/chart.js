@@ -44,6 +44,9 @@ export default {
       // 전체인지, 특정 월을 선택한 것인지, true면 전체, false면 특정 월
       isYearOrMonth: true,
     },
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     sidoBar: {
       // 지금 체크된 지역 (시도)
       nowChecked: null,
@@ -63,43 +66,54 @@ export default {
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    // 타이틀 가져오기
     getTitle(state, getters) {
       if (getters.getNowMonth == ( null || '전체' )) {
         return `${getters.getNowYear}년 수거자 배출자 등록 현황`;
       }
       return `${getters.getNowYear}년 ${getters.getNowMonth}월 수거자 배출자 등록 현황`;
     },
+    // 선택된 현재 년도 가져오기
     getNowYear(state) {
       return state.calendarBar.nowYear;
     },
+    // 선택된 현재 월 가져오기
     getNowMonth(state) {
       if (state.calendarBar.nowMonth == null){
         return '전체'
       }
       return state.calendarBar.nowMonth;
     },
+    // 선택된 현재 월(1일~31일)의 배출자, 수거자 수가 들어있는 obj 반환
     getEmitColDay(state) {
       return {
         emit: state.calendarBar.barEmitDay,
         col: state.calendarBar.barColDay,
       };
     },
-    // 데이터가 있는 월 가져오기
+    // 데이터가 있는 월 가져오기 null은 전체로 변환
     getBarMonth(state) {
-      return state.calendarBar.barMonth.map((v) => {
-        if (v == null) return "전체";
+      const monthArr = state.calendarBar.barMonth.map((v) => {
+        if (v == null) return 0;
         else return v;
       });
+      monthArr.sort()
+      monthArr[0] = '전체'
+      return monthArr
     },
+    // 선택된 현재 년도(1월~12월)의 배출자, 수거자 수가 들어있는 obj 반환
     getEmitColMonth(state) {
       return {
         emit: state.calendarBar.barEmitMonth,
         col: state.calendarBar.barColMonth,
       };
     },
+    // 차트 하단에 '1일' '2일'을 표시하기 위한 배열
     getBarTotalDay(state) {
       return state.calendarBar.barTotalDay;
     },
+    // 차트 하단에 '1월' '2월'을 표시하기 위한 배열
     getBarTotalMonth() {
       return [
         "1월",
@@ -116,7 +130,9 @@ export default {
         "12월",
       ];
     },
+    // 데이터 가져오는 역할
     getDataSet(state, getters) {
+      // '전체'를 클릭한 경우에 isYearOrMonth는 true
       if (state.calendarBar.isYearOrMonth) {
         return {
           labels: getters.getBarTotalMonth,
@@ -134,6 +150,7 @@ export default {
           ],
         };
       }
+      // 특정 '월'을 클릭한 경우에 isYearOrMonth는 false
       return {
         labels: getters.getBarTotalDay,
         datasets: [
@@ -150,6 +167,7 @@ export default {
         ],
       };
     },
+
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -212,7 +230,6 @@ export default {
       state.calendarBar.nowYear = payload;
     },
     setNowMonth(state, payload) {
-      console.log(payload)
       state.calendarBar.nowMonth = payload;
     },
     setBarEmitMonth(state, payload) {
@@ -229,6 +246,7 @@ export default {
     },
     setMonth(state, payload) {
       state.calendarBar.barMonth = [...payload];
+      // '전체'를 표시하기 위한 위한 null값
       state.calendarBar.barMonth.unshift(null);
     },
     setBarTotalDay(state, payload) {
@@ -237,9 +255,12 @@ export default {
     setIsYearOrMonth(state, payload) {
       state.calendarBar.isYearOrMonth = payload;
     },
+
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
     setSidoOrSigunguEmit(state, payload) {
       state.sidoBar.emitter = [...payload];
     },
@@ -273,9 +294,13 @@ export default {
     },
   },
   actions: {
+
+
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ BarChart @@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
     async getBarChartInfo({ rootState, commit, state }) {
       try {
         // 1월 ~ 12월까지의 마지막 날, 인덱싱을 위해 첫 월은 0으로 지정
@@ -283,7 +308,9 @@ export default {
         const res = await chartApi.getBarChartInfo({state, rootState});
         const inputMonth = res.data.data[0].INPUT_PARAM[0].PARAM_MONTH;
         const stats = res.data.data[0].STAT;
-        // 년 단위
+
+
+        // 년 단위 (전체 클릭 한 경우)
         if (inputMonth == null) {
           // ex) 2022년 전체를 클릭하면 전체의 값이 null이기 때문에
           // 1 ~ 12월의 데이터가 들어온다.
@@ -302,7 +329,7 @@ export default {
           for (const stat of stats) {
             const month = stat.PARAM_MONTH - 1;
             const num = stat.QTY;
-            if (stat.USER_TYPE == 9) {
+            if (stat.USER_TYPE == 2) {
               yearEmi[month] = num;
             } else {
               yearCol[month] = num;
@@ -314,7 +341,9 @@ export default {
           commit("setBarEmitMonth", yearEmi);
           commit("setBarColMonth", yearCol);
           commit("setIsYearOrMonth", true);
-          // 월 단위
+
+
+          // 월 단위 (월 클릭한 경우)
         } else {
           // 위와 마찬가지
           let monthEmi = [];
@@ -335,7 +364,7 @@ export default {
           for (const stat of stats) {
             const day = stat.PARAM_DAY - 1;
             const num = stat.QTY;
-            if (stat.USER_TYPE == 9) {
+            if (stat.USER_TYPE == 2) {
               monthEmi[day] = num;
             } else {
               monthCol[day] = num;
@@ -350,6 +379,8 @@ export default {
         console.log(e);
       }
     },
+
+
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@ SidoBarChart@@@@@@@@@@@@@@@@@@@@@@@
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

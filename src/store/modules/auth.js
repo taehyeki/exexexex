@@ -3,74 +3,34 @@ import router from "@/router";
 import cloneDeep from "lodash/cloneDeep";
 import authApi from "@/api/apiList/authApi"
 
+// 기본 어드민 유저의 정보
 const INITIAL_STATE = {
+  // 인덱스 아이디값
   userId: null,
+  // 권한 클래스 값
   class: null,
-  chatRooms : [],
-  sockets : 0,
-  chats : [],
 };
-const showCreated = (time) =>{
-  return time.slice(11,16)
-}
-const isRead = (tf) => {
-  if(!tf){
-    return '안읽음'
-  }
-  return ''
-}
 
 export default {
   namespaced: true,
   state: cloneDeep(INITIAL_STATE),
   mutations: {
+    // 로그인 한 어드민 유저 설정
     setUser(state, { userId, classNum }) {
       state.userId = userId;
       state.class = classNum;
     },
+    // 로그아웃
     logout(state) {
+      // 쿠키에서 토큰제거 후 vuex의 userId, class 초기화
       VueCookies.remove("token");
       location.reload()
       Object.assign(state, cloneDeep(INITIAL_STATE));
     },
-    setChatRooms(state,payload){
-      state.chatRooms = payload
-    },
-    setChats(state,payload){
-      for (var i=0; i<payload.length; i++){
-        if (
-          i > 0 &&
-          // 내가 적은 글
-          // 글의 작성자가 나여야 하고,
-          payload[i].USER_ID == state.userId &&
-          // 채팅 ( 디비에서 가져온 채팅이 아닌 채팅창에서 적은) 이 존재해야하며
-          payload[i - 1] &&
-          // 전 채팅 작성시각이 같아야하고
-          payload[i - 1].CREATED_AT == showCreated(payload[i].CREATED_AT) &&
-          // 전 채팅 작성자가 나와 같아야 한다.
-          payload[i - 1].USER_ID == state.userId
-        ){
-          // 전 글의 시각을 숨김
-          payload[i - 1].CREATED_AT = ''
-        }
-      // 상대가 적은 글
-        else if (
-          i > 0 &&
-          payload[i].USER_ID != state.userId &&
-          payload[i - 1] &&
-          payload[i - 1].CREATED_AT == showCreated(payload[i].CREATED_AT) &&
-          payload[i - 1].USER_ID != state.userId
-          ){
-            payload[i - 1].CREATED_AT = ''
-          }
-          payload[i].CREATED_AT = showCreated(payload[i].CREATED_AT)
-          payload[i].IS_READ = isRead(payload[i].IS_READ)
-      }
-      state.chats = payload
-    },
 
   },
   actions: {
+    // 로그인
     async login({ commit }, { adminId, adminPw }) {
       let res
       try{
@@ -90,26 +50,18 @@ export default {
       const getData = JSON.parse(res.data.data);
       const userId = getData.ID;
       const classNum = getData.CLASS;
+      // 로그인 성공시 받아온 토큰 값을 쿠키에 저장
       const token = res.data.token.token;
       VueCookies.set("token", token, "6h");
+      // 아이디 값과 권한 클래스값 저장
       commit("setUser", { userId, classNum });
-      router.push({ path: "/admin/main2/permit2" });
+      // 화면 이동
+      router.push({ path: "/admin/main/emitter-collector" });
     },
-
-    async chatRooms({state,commit }) {
-      try{
-        const res = await authApi.chatRooms({userId : state.userId });
-        let chatRooms = res.data.data[0].LAST_MESSAGES
-        chatRooms = chatRooms.map( (v)=>{ return {ROOM_ID : v.ROOM_ID, MESSAGE : v.MESSAGE, UNREAD : v.UNREAD}})
-        commit('setChatRooms',chatRooms)
-      }catch(e){
-        console.log(e)
-      }
-    },
-
   },
   getters: {
     getUserClass(state) {
+      // 현재의 유저 클래스에 따라 관리자의 이름이 다르게 보이도록 설정
       if (state.class == null) {
         return "로그인을 해주세요.";
       } else if (state.class == 101) {
@@ -117,31 +69,20 @@ export default {
       }
       return "일반 관리자";
     },
+    // 로그인 했는지 여부를 userId값으로 판단
     isLogged(state) {
       if (state.userId) {
         return true;
       }
       return false;
     },
+    // 클래스 권한 값을 통하여 권한 판단
     canYouComeHere1(state) {
       if (state.class == 101) {
         return true;
       }
       return false;
     },
-    getUserId(state){
-      return state.userId
-    },
-    getChatRooms(state){
-      return state.chatRooms
-    },
-    getChats(state){
-      return state.chats
-    },
-
-    getSocket(state){
-      return state.sockets
-    }
   },
 };
 

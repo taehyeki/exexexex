@@ -1,10 +1,14 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import common from "./modules/common";
-import permit2 from "./modules/permit2";
+import emitterCollector from "./modules/emitterCollector";
 import auth from "./modules/auth";
 import chart from "./modules/chart";
 import selectedUser from "./modules/selectedUser";
+import emissions from "./modules/emissions";
+import biddings from "./modules/biddings";
+import transaction from "./modules/transaction";
+import report from "./modules/report";
 import createPersistedState from "vuex-persistedstate";
 import SecureLS from "secure-ls";
 const ls = new SecureLS({ isCompression: false });
@@ -25,8 +29,12 @@ export default new Vuex.Store({
   modules: {
     chart,
     common,
-    permit2,
+    emitterCollector,
     selectedUser,
     auth,
+    emissions,
+    biddings,
+    transaction,
+    report
   },
 });

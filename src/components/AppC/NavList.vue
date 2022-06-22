@@ -17,13 +17,28 @@
         v-for="item in getNavList"
         :key="item.title"
         link
-        @click="goToRoute(item.route)"
       >
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-item-icon>
-
-        <v-list-item-content>
+        <v-list-item-content
+          v-if="item.title === '회원목록' "
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item
+            v-for="eachNav in item.subNavs"
+            :key="eachNav.title"
+            link
+          >
+            <v-list-item-content @click="goToRoute(eachNav.route)">
+              <v-list-item-title>{{ eachNav.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-content>
+        <v-list-item-content
+          v-else
+          @click="goToRoute(item.route)"
+        >
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
